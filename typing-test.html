@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Typing Test — PirateRuler.com</title>
+<meta name="description" content="Typing Test by PirateRuler — fast, privacy-first typing speed & accuracy tester. No tracking. Works in-browser." />
+<meta name="theme-color" content="#071225" />
+<style>
+  /* --- theme tokens (keeps same variables approach as main site) --- */
+  :root{
+    --accent-a: #6b7dff;
+    --accent-b: #7b4bff;
+    --bg-light: linear-gradient(180deg,#f7fbfe,#f3f7fb);
+    --bg-dark: linear-gradient(180deg,#061028,#071225);
+    --card-light: #ffffff;
+    --card-dark: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    --text-light: #071225;
+    --text-dark: #e9f1ff;
+    --muted-light: #6b7480;
+    --muted-dark: #98a7bf;
+    --glass: rgba(255,255,255,0.03);
+    --radius: 14px;
+    --max-width: 1100px;
+  }
+
+  html.light { --bg: var(--bg-light); --card: var(--card-light); --text: var(--text-light); --muted: var(--muted-light); --offcanvas-bg: #ffffff; }
+  html.dark  { --bg: var(--bg-dark);  --card: var(--card-dark);  --text: var(--text-dark);  --muted: var(--muted-dark);  --offcanvas-bg: #061028; }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    background:var(--bg);
+    color:var(--text);
+    padding:18px;
+    line-height:1.4;
+  }
+
+  .wrap{max-width:var(--max-width);margin:0 auto}
+
+  .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+  .brand {display:flex;gap:12px;align-items:center}
+  .logo{width:54px;height:54px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));color:#fff;font-weight:900}
+  .brand h1{margin:0;font-size:18px}
+  .brand p{margin:0;font-size:12px;color:var(--muted)}
+
+  .controls {display:flex;gap:8px;align-items:center}
+
+  /* main layout */
+  .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+  @media(max-width:980px){ .grid{grid-template-columns:1fr} }
+
+  /* left area test card */
+  .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(2,8,20,0.25)}
+  .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,0.04);color:var(--muted);font-weight:700;margin-bottom:12px}
+
+  .title{font-weight:900;font-size:20px;margin:0 0 8px 0}
+  .desc{color:var(--muted);margin:0 0 12px 0}
+
+  /* test area */
+  #passageBox{min-height:120px;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02));margin-bottom:12px;overflow:auto}
+  #passageBox mark.correct{background:transparent;color:var(--text)}
+  #passageBox mark.incorrect{background:rgba(255,80,80,0.12); color:inherit}
+  #passageBox mark.current{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#fff;padding:2px 4px;border-radius:6px}
+
+  .input-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+  #typedInput{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:16px}
+  .small{font-size:13px;color:var(--muted)}
+
+  /* timer + actions */
+  .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  .btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:800}
+  .btn-primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#fff}
+  .btn-muted{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted)}
+
+  .stats{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .stat{background:var(--card);padding:10px 14px;border-radius:10px;border:1px solid rgba(0,0,0,0.04);min-width:92px;text-align:center}
+  .stat .n{font-weight:900;font-size:18px}
+  .stat .l{font-size:12px;color:var(--muted)}
+
+  /* presets / controls */
+  .controls-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+  select,input[type="number"]{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06)}
+
+  /* keyboard area */
+  .keyboard-wrap{margin-top:12px}
+  .kb-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
+  .key{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+    min-width:40px;padding:8px;border-radius:8px;text-align:center;border:1px solid rgba(0,0,0,0.04);user-select:none;
+    box-shadow:0 6px 18px rgba(2,8,20,0.15);
+    color:var(--text);
+  }
+  .key.small{min-width:28px;padding:6px}
+  .key.wide{min-width:70px}
+  .key.active{outline:3px solid rgba(107,125,255,0.22);transform:translateY(-3px)}
+  .key.err{background:rgba(255,80,80,0.12);border-color:rgba(255,80,80,0.16)}
+
+  /* right column */
+  .side .panel{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
+  .side h3{margin:0 0 8px 0}
+  .option{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .color-swatch{width:36px;height:36px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)}
+
+  .footer-note{font-size:12px;color:var(--muted);margin-top:14px}
+
+  /* responsive tweaks */
+  @media(max-width:520px){
+    .kb-row{flex-wrap:wrap}
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">PR</div>
+        <div>
+          <h1>Typing Test</h1>
+          <p class="small">Privacy-first, in-browser typing trainer</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="themeToggle" class="btn btn-muted" title="Toggle theme">Toggle Theme</button>
+        <a href="/" class="btn btn-muted" style="text-decoration:none">Back Home</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: test area -->
+      <section>
+        <div class="card" aria-labelledby="testTitle">
+          <div class="kicker">Practice examples</div>
+          <h2 class="title" id="testTitle">Typing Test — Instant</h2>
+          <p class="desc">Choose a preset or paste your own text. Use start/pause/reset. Results remain local unless you export them.</p>
+
+          <div id="passageBox" role="region" aria-live="polite"></div>
+
+          <div style="display:flex;gap:8px;align-items:center;margin-top:12px">
+            <input id="typedInput" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="Type here..." />
+            <div class="small">Time: <span id="timerDisplay">60</span>s</div>
+          </div>
+
+          <div class="actions">
+            <button id="startBtn" class="btn btn-primary">Start</button>
+            <button id="pauseBtn" class="btn btn-muted">Pause</button>
+            <button id="resetBtn" class="btn btn-muted">Reset</button>
+            <button id="redoBtn" class="btn btn-muted">Redo</button>
+
+            <div style="flex:1"></div>
+
+            <button id="exportBtn" class="btn btn-muted">Export CSV</button>
+            <button id="copyBtn" class="btn btn-muted">Copy Summary</button>
+          </div>
+
+          <div class="stats" aria-live="polite">
+            <div class="stat"><div class="n" id="wpm">0</div><div class="l">WPM</div></div>
+            <div class="stat"><div class="n" id="acc">100%</div><div class="l">Accuracy</div></div>
+            <div class="stat"><div class="n" id="chars">0</div><div class="l">Chars</div></div>
+            <div class="stat"><div class="n" id="errors">0</div><div class="l">Errors</div></div>
+          </div>
+
+          <div class="controls-row">
+            <label class="small">Preset:</label>
+            <select id="presetSel" aria-label="Choose preset">
+              <option value="pangram">Pangram — The quick brown fox...</option>
+              <option value="practice">Practice phrase — rhythm & accuracy</option>
+              <option value="tech">Tech line — developer style</option>
+              <option value="lorem">Long passage — stamina</option>
+              <option value="custom">Paste custom text...</option>
+            </select>
+
+            <label class="small">Duration (s):</label>
+            <select id="durationSel" aria-label="Duration">
+              <option value="30">30</option>
+              <option value="60" selected>60</option>
+              <option value="120">120</option>
+              <option value="0">Custom</option>
+            </select>
+
+            <input id="customDuration" type="number" min="5" max="3600" placeholder="secs" style="width:90px;display:none"/>
+
+            <label style="display:flex;align-items:center;gap:6px"><input id="muteToggle" type="checkbox" /> <span class="small">Mute</span></label>
+          </div>
+
+          <div style="margin-top:12px" class="small muted">
+            <div>Tip: Click "Start" then focus the input field (the field auto-focuses on start). Use <strong>Redo</strong> to restart with same passage & duration.</div>
+          </div>
+
+          <!-- keyboard visual -->
+          <div class="keyboard-wrap" aria-hidden="false">
+            <!-- we'll render rows via JS -->
+            <div id="keyboard" aria-hidden="false"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- RIGHT: settings & info -->
+      <aside class="side">
+        <div class="panel card">
+          <h3>Options</h3>
+
+          <div class="option">
+            <div style="flex:1">
+              <label class="small">Keyboard layout</label><br/>
+              <select id="layoutSel">
+                <option value="qwerty">QWERTY</option>
+                <!-- future: add other layouts -->
+              </select>
+            </div>
+          </div>
+
+          <div class="option">
+            <div style="flex:1">
+              <label class="small">Keyboard color</label><br/>
+              <select id="kbColor">
+                <option value="gray">Gray</option>
+                <option value="blue">Blue</option>
+                <option value="purple">Purple</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="option">
+            <div style="flex:1">
+              <label class="small">Font size</label><br/>
+              <select id="fontSize">
+                <option value="15">Default</option>
+                <option value="17">Bigger</option>
+                <option value="13">Smaller</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="height:8px"></div>
+          <h3 style="margin-top:8px">Session history</h3>
+          <div id="history" class="small muted">No sessions yet.</div>
+
+          <div class="footer-note">Results are kept in your browser only. Export to save or share.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+/* Typing Test logic (self-contained, no external libs) */
+
+/* -------------------------
+   Helpers & state
+   ------------------------- */
+const passageBox = document.getElementById('passageBox');
+const typedInput = document.getElementById('typedInput');
+const startBtn = document.getElementById('startBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const resetBtn = document.getElementById('resetBtn');
+const redoBtn = document.getElementById('redoBtn');
+const exportBtn = document.getElementById('exportBtn');
+const copyBtn = document.getElementById('copyBtn');
+
+const wpmEl = document.getElementById('wpm');
+const accEl = document.getElementById('acc');
+const charsEl = document.getElementById('chars');
+const errsEl = document.getElementById('errors');
+const timerDisplay = document.getElementById('timerDisplay');
+
+const presetSel = document.getElementById('presetSel');
+const durationSel = document.getElementById('durationSel');
+const customDuration = document.getElementById('customDuration');
+const muteToggle = document.getElementById('muteToggle');
+
+const layoutSel = document.getElementById('layoutSel');
+const kbColor = document.getElementById('kbColor');
+const fontSizeSel = document.getElementById('fontSize');
+const historyEl = document.getElementById('history');
+
+const themeToggle = document.getElementById('themeToggle');
+
+let timer = null;
+let remaining = 60; // seconds
+let running = false;
+let startTime = null;
+let elapsed = 0;
+let typed = '';
+let errors = 0;
+let charIndex = 0;
+let targetText = '';
+let lastSnapshot = null;
+let sessions = [];
+
+/* audio for keypress (very small click) */
+const keyAudio = (() => {
+  const ctx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
+  return {
+    play() {
+      if(!ctx) return;
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = 700;
+      g.gain.value = 0.02;
+      o.connect(g);
+      g.connect(ctx.destination);
+      o.start();
+      o.stop(ctx.currentTime + 0.03);
+    }
+  }
+})();
+
+/* default passages */
+const PASSES = {
+  pangram: "The quick brown fox jumps over the lazy dog.",
+  practice: "Practice daily: consistency beats intensity when learning to type. Short focused drills win.",
+  tech: "Technology moves fast. Build resilient systems, write tests, and ship small improvements often.",
+  lorem: "A long sample passage to improve typing stamina. Try to keep a steady rhythm, focus on accuracy first, then speed. Breathe and avoid unnecessary jitter. Build progress by repeating short sessions daily."
+};
+
+/* keyboard layout (QWERTY) - rows; keys are display value and code for highlighting */
+const QWERTY_ROWS = [
+  ['`','1','2','3','4','5','6','7','8','9','0','-','=','Backspace'],
+  ['Tab','q','w','e','r','t','y','u','i','o','p','[',']','\\'],
+  ['Caps','a','s','d','f','g','h','j','k','l',';','\'','Enter'],
+  ['Shift','z','x','c','v','b','n','m',',','.','/','Shift'],
+  ['Ctrl','Alt','Space','Alt','Ctrl']
+];
+
+const htmlEl = document.documentElement;
+
+/* Theme initialization & toggle: respect localStorage; keep in sync with main site */
+(function initTheme(){
+  const saved = localStorage.getItem('pr-theme') || 'light';
+  htmlEl.classList.remove('light','dark');
+  htmlEl.classList.add(saved === 'dark' ? 'dark' : 'light');
+  themeToggle.textContent = (saved === 'dark' ? 'Dark' : 'Light');
+})();
+themeToggle.addEventListener('click', () => {
+  const current = htmlEl.classList.contains('light') ? 'light' : 'dark';
+  const next = current === 'light' ? 'dark' : 'light';
+  htmlEl.classList.remove('light','dark'); htmlEl.classList.add(next);
+  localStorage.setItem('pr-theme', next);
+  themeToggle.textContent = next === 'dark' ? 'Dark' : 'Light';
+});
+
+/* -------------------------
+   UI rendering
+   ------------------------- */
+function renderPassage(str){
+  // show characters; mark correct/incorrect/current
+  passageBox.innerHTML = '';
+  // escape
+  const safe = String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  for(let i=0;i<safe.length;i++){
+    const ch = safe[i];
+    const span = document.createElement('mark');
+    span.textContent = ch;
+    span.dataset.index = i;
+    if(i < typed.length){
+      const expected = safe[i];
+      const actual = typed[i] || '';
+      if(actual === expected) span.classList.add('correct');
+      else span.classList.add('incorrect');
+    }
+    if(i === typed.length){
+      span.classList.add('current');
+      span.scrollIntoView({behavior:'smooth',inline:'nearest',block:'nearest'});
+    }
+    passageBox.appendChild(span);
+  }
+  // if typed is longer than passage, show remainder typed as incorrect
+  if(typed.length > safe.length){
+    const extra = document.createElement('mark');
+    extra.classList.add('incorrect');
+    extra.textContent = typed.slice(safe.length);
+    passageBox.appendChild(extra);
+  }
+}
+
+function renderKeyboard(){
+  const container = document.getElementById('keyboard');
+  container.innerHTML = '';
+  const rows = QWERTY_ROWS;
+  rows.forEach(row=>{
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'kb-row';
+    row.forEach(k=>{
+      const key = document.createElement('div');
+      key.className = 'key';
+      if(k.length <= 2) key.classList.add('small');
+      if(k === 'Backspace' || k === 'Enter' || k === 'Shift' || k === 'Space' || k === 'Tab' || k==='Caps') key.classList.add('wide');
+      key.dataset.code = k.toLowerCase();
+      // display prettified label
+      key.textContent = (k === 'Space') ? ' ' : k;
+      rowDiv.appendChild(key);
+    });
+    container.appendChild(rowDiv);
+  });
+  applyKeyboardColor();
+}
+
+function applyKeyboardColor(){
+  const color = kbColor.value;
+  const keys = document.querySelectorAll('.key');
+  keys.forEach(k=>{
+    if(color === 'gray'){
+      k.style.background = 'linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01))';
+    } else if(color === 'blue'){
+      k.style.background = 'linear-gradient(180deg, rgba(107,125,255,0.12), rgba(11,179,255,0.04))';
+    } else {
+      k.style.background = 'linear-gradient(180deg, rgba(123,75,255,0.12), rgba(107,125,255,0.04))';
+    }
+  });
+}
+
+function setFontSize(){
+  const size = fontSizeSel.value;
+  document.querySelectorAll('body, .key, .stat, .muted').forEach(el=>{
+    el.style.fontSize = (size ? size + 'px' : '');
+  });
+}
+
+/* -------------------------
+   Input & typing logic
+   ------------------------- */
+function setTargetFromPreset(preset){
+  if(preset === 'custom'){
+    const custom = prompt('Paste your custom passage (max 3000 chars):') || '';
+    targetText = custom.slice(0,3000) || PASSES.pangram;
+  } else {
+    targetText = PASSES[preset] || PASSES.pangram;
+  }
+  typed = '';
+  charIndex = 0;
+  errors = 0;
+  renderPassage(targetText);
+}
+
+/* timing */
+function setDurationFromSelect(){
+  const v = durationSel.value;
+  if(v === '0'){
+    customDuration.style.display = 'inline-block';
+    const cd = parseInt(customDuration.value,10) || 60;
+    remaining = cd;
+  } else {
+    customDuration.style.display = 'none';
+    remaining = parseInt(v,10);
+  }
+  timerDisplay.textContent = remaining;
+}
+
+durationSel.addEventListener('change', () => {
+  setDurationFromSelect();
+});
+
+customDuration.addEventListener('input', () => {
+  const cd = parseInt(customDuration.value,10);
+  if(!isNaN(cd) && cd > 0) {
+    remaining = cd;
+    timerDisplay.textContent = remaining;
+  }
+});
+
+/* start/pause/reset/redo */
+function startTest(){
+  if(running) return;
+  if(!targetText) setTargetFromPreset(presetSel.value);
+  running = true;
+  startTime = Date.now() - (elapsed*1000);
+  startBtn.disabled = true;
+  pauseBtn.disabled = false;
+  typedInput.focus();
+  // start countdown if duration > 0 (0 means unlimited)
+  if(parseInt(durationSel.value,10) !== 0 || customDuration.style.display !== 'inline-block'){
+    if(timer) clearInterval(timer);
+    timer = setInterval(()=> {
+      const now = Date.now();
+      elapsed = Math.floor((now - startTime) / 1000);
+      const dur = (durationSel.value === '0') ? (parseInt(customDuration.value,10) || 0) : parseInt(durationSel.value,10);
+      remaining = Math.max( (dur || 0) - elapsed, 0);
+      timerDisplay.textContent = remaining;
+      if(remaining <= 0 && dur > 0){
+        stopTest(true);
+      }
+    }, 250);
+  } else {
+    // no countdown, track elapsed only
+    if(timer) clearInterval(timer);
+    timer = setInterval(()=> {
+      elapsed = Math.floor((Date.now() - startTime)/1000);
+      timerDisplay.textContent = elapsed;
+    }, 500);
+  }
+}
+
+function pauseTest(){
+  if(!running) return;
+  running = false;
+  startBtn.disabled = false;
+  pauseBtn.disabled = true;
+  if(timer) clearInterval(timer);
+  elapsed = Math.floor((Date.now() - startTime)/1000);
+}
+
+function stopTest(autoComplete=false){
+  running = false;
+  startBtn.disabled = false;
+  pauseBtn.disabled = true;
+  if(timer) clearInterval(timer);
+  // record session
+  const session = {
+    time: new Date().toISOString(),
+    target: targetText.slice(0,200),
+    chars: typed.length,
+    errors,
+    wpm: calculateWPM(),
+    accuracy: calculateAccuracy()
+  };
+  sessions.unshift(session);
+  if(sessions.length > 10) sessions.pop();
+  renderHistory();
+  // show summary
+  if(autoComplete){
+    alert(`Test finished — WPM: ${session.wpm}, Accuracy: ${session.accuracy}%`);
+  }
+}
+
+function resetTest(){
+  running = false;
+  if(timer) clearInterval(timer);
+  elapsed = 0;
+  typed = '';
+  errors = 0;
+  charIndex = 0;
+  startBtn.disabled = false;
+  pauseBtn.disabled = true;
+  setDurationFromSelect();
+  renderPassage(targetText);
+  updateStats();
+  typedInput.value = '';
+}
+
+function redoTest(){
+  resetTest();
+  startTest();
+}
+
+/* typing handling */
+function onUserInput(e){
+  if(!targetText) return;
+  // allow only while running (but allow viewing and corrections)
+  const val = e.target.value;
+  typed = val;
+  // compute errors compared to target
+  const safe = targetText;
+  errors = 0;
+  for(let i=0;i<typed.length;i++){
+    if(i >= safe.length) { errors++; continue; }
+    if(typed[i] !== safe[i]) errors++;
+  }
+  charIndex = typed.length;
+  renderPassage(targetText);
+  updateStats();
+}
+
+typedInput.addEventListener('input', onUserInput);
+
+/* keyboard highlight on physical keys */
+document.addEventListener('keydown', (ev) => {
+  // ignore if modifier or in control combos (but still highlight)
+  const key = ev.key.toLowerCase();
+  highlightKey(key, true);
+  if(!running && (ev.key.length === 1 || ev.key === 'Backspace')) {
+    // if user typed outside start, still allow editing
+    // nothing special
+  }
+  if(!muteToggle.checked) {
+    if(ev.key.length === 1 || ev.key === 'Backspace' || ev.key === 'Enter') keyAudio.play();
+  }
+});
+document.addEventListener('keyup', (ev) => {
+  const key = ev.key.toLowerCase();
+  highlightKey(key, false);
+});
+
+/* virtual keyboard clicking support */
+document.addEventListener('click', (ev) => {
+  const k = ev.target.closest('.key');
+  if(!k) return;
+  // map special keys
+  const code = k.dataset.code;
+  if(!code) return;
+  if(code === 'backspace'){
+    typedInput.value = typedInput.value.slice(0,-1);
+    typedInput.dispatchEvent(new Event('input'));
+    return;
+  }
+  if(code === 'enter'){
+    typedInput.value += '\n';
+    typedInput.dispatchEvent(new Event('input'));
+    return;
+  }
+  if(code === 'space'){
+    typedInput.value += ' ';
+    typedInput.dispatchEvent(new Event('input'));
+    return;
+  }
+  if(code === 'tab'){
+    typedInput.value += '\t';
+    typedInput.dispatchEvent(new Event('input'));
+    return;
+  }
+  if(code === 'shift' || code === 'caps' || code === 'ctrl' || code === 'alt') return;
+  // normal keys
+  typedInput.value += k.textContent.trim();
+  typedInput.dispatchEvent(new Event('input'));
+  if(!muteToggle.checked) keyAudio.play();
+});
+
+/* highlight helpers */
+function highlightKey(key, on){
+  if(!key) return;
+  // unify space, backspace, enter
+  let selectorKey = key;
+  if(key === ' ') selectorKey = 'space';
+  if(key === 'backspace') selectorKey = 'backspace';
+  if(key === 'enter') selectorKey = 'enter';
+  if(key === 'tab') selectorKey = 'tab';
+  if(key === 'capslock') selectorKey = 'caps';
+  // find matching
+  const all = document.querySelectorAll('.key');
+  all.forEach(k=>{
+    const code = k.dataset.code;
+    if(!code) return;
+    if(code === selectorKey || code === key) {
+      if(on) k.classList.add('active'); else k.classList.remove('active');
+    }
+  });
+}
+
+/* stats */
+function calculateWPM(){
+  const minutes = Math.max( (elapsed || 1) / 60, 1/60 );
+  const words = (typed.trim().length / 5);
+  const w = Math.round(words / minutes);
+  return w >= 0 ? w : 0;
+}
+function calculateAccuracy(){
+  const total = typed.length || 1;
+  const correct = Math.max(total - errors,0);
+  const pct = Math.max( Math.round( (correct / total) * 100 ), 0);
+  return pct;
+}
+function updateStats(){
+  wpmEl.textContent = calculateWPM();
+  accEl.textContent = calculateAccuracy() + '%';
+  charsEl.textContent = typed.length;
+  errsEl.textContent = errors;
+}
+
+/* export results */
+exportBtn.addEventListener('click', () => {
+  const rows = [
+    ['time','target','chars','errors','wpm','accuracy']
+  ];
+  sessions.forEach(s=>{
+    rows.push([s.time, s.target.replace(/\n/g,' '), s.chars, s.errors, s.wpm, s.accuracy]);
+  });
+  // also add current session
+  rows.push([new Date().toISOString(), targetText.slice(0,120).replace(/\n/g,' '), typed.length, errors, calculateWPM(), calculateAccuracy()]);
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'typing-sessions.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+/* copy summary */
+copyBtn.addEventListener('click', async () => {
+  const text = `Typing Test — WPM: ${calculateWPM()}, Accuracy: ${calculateAccuracy()}%, Chars: ${typed.length}, Errors: ${errors}`;
+  try{
+    await navigator.clipboard.writeText(text);
+    alert('Summary copied to clipboard');
+  }catch(e){
+    prompt('Copy summary', text);
+  }
+});
+
+/* button wiring */
+startBtn.addEventListener('click', () => {
+  if(!targetText) setTargetFromPreset(presetSel.value);
+  startTest();
+});
+pauseBtn.addEventListener('click', pauseTest);
+resetBtn.addEventListener('click', () => { if(confirm('Reset test?')) resetTest(); });
+redoBtn.addEventListener('click', redoTest);
+
+/* preset selection logic */
+presetSel.addEventListener('change', () => {
+  setTargetFromPreset(presetSel.value);
+  resetTest();
+});
+
+/* layout/color/font options */
+kbColor.addEventListener('change', applyKeyboardColor);
+fontSizeSel.addEventListener('change', setFontSize);
+
+/* render history */
+function renderHistory(){
+  if(sessions.length === 0){
+    historyEl.textContent = 'No sessions yet.';
+    return;
+  }
+  historyEl.innerHTML = '';
+  sessions.slice(0,6).forEach(s=>{
+    const d = document.createElement('div');
+    d.style.padding = '8px';
+    d.style.borderBottom = '1px solid rgba(0,0,0,0.04)';
+    d.innerHTML = `<strong style="display:block">${s.wpm} WPM — ${s.accuracy}%</strong>
+                   <div class="small" style="color:var(--muted)">${new Date(s.time).toLocaleString()}</div>
+                   <div class="small" style="color:var(--muted)">${s.target}</div>`;
+    historyEl.appendChild(d);
+  });
+}
+
+/* initial render */
+(function init(){
+  // load saved theme already handled by main; ensure Start=light default
+  // prepare default passage
+  setTargetFromPreset('pangram');
+  setDurationFromSelect();
+  renderKeyboard();
+  setFontSize();
+  updateStats();
+  // ensure typed input won't auto-correct or capitalize
+  typedInput.setAttribute('autocorrect','off');
+  typedInput.setAttribute('autocapitalize','off');
+  typedInput.setAttribute('spellcheck','false');
+  // when focus typed input, move caret to end
+  typedInput.addEventListener('focus', (e) => {
+    const val = e.target.value;
+    e.target.value = '';
+    e.target.value = val;
+  });
+
+  // keyboard color default
+  applyKeyboardColor();
+
+  // load saved theme from localStorage if exists (already done by main site)
+  // ensure default mute = false
+  muteToggle.checked = false;
+})();
+
+/* keep visual passage in sync when window resized or scrolled */
+window.addEventListener('resize', () => renderPassage(targetText));
+
+</script>
+</body>
+</html>
