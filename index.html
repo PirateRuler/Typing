@@ -30,6 +30,10 @@
     --shadow-lg: 0 20px 50px rgba(2,8,20,0.6);
     --shadow-soft: 0 10px 30px rgba(2,8,20,0.35);
     --max-width: 1100px;
+
+    /* offcanvas background default (dark) - solid-ish */
+    --offcanvas-bg: #061028;
+    --offcanvas-link-bg: rgba(255,255,255,0.02);
   }
 
   /* Light theme */
@@ -42,6 +46,10 @@
     --text: #071225;
     --shadow-lg: 0 18px 50px rgba(3,12,30,0.06);
     --shadow-soft: 0 8px 24px rgba(3,12,30,0.06);
+
+    /* offcanvas in light: solid white */
+    --offcanvas-bg: #ffffff;
+    --offcanvas-link-bg: rgba(11,17,36,0.03);
   }
 
   /* basic reset */
@@ -177,11 +185,36 @@
   footer .visit {display:inline-block;padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent-c),var(--accent-a));color:white;font-weight:800;box-shadow:0 14px 40px rgba(139,60,140,0.14)}
   footer small{display:block;margin-top:10px;color:var(--muted);font-size:13px}
 
-  /* off-canvas sidebar */
-  .offcanvas {position:fixed;right:12px;top:12px;width:340px;max-width:92vw;background:var(--card-dark);border-radius:14px;padding:14px;box-shadow:var(--shadow-lg);transform:translateX(120%);transition:transform .28s ease;z-index:200}
+  /* off-canvas sidebar - NOTE: background uses solid --offcanvas-bg to avoid transparency */
+  .offcanvas {
+    position:fixed;
+    right:12px;
+    top:12px;
+    width:340px;
+    max-width:92vw;
+    background:var(--offcanvas-bg);
+    border-radius:14px;
+    padding:14px;
+    box-shadow:var(--shadow-lg);
+    transform:translateX(120%);
+    transition:transform .28s ease;
+    z-index:200;
+    /* ensure text color contrasts */
+    color:var(--text);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
   .offcanvas.open{transform:translateX(0)}
   .offcanvas h3{margin:0 0 8px 0}
-  .offcanvas a{display:block;padding:10px;border-radius:10px;color:var(--text);font-weight:800;margin-bottom:6px;background:transparent;border:1px solid rgba(255,255,255,0.02)}
+  .offcanvas a{
+    display:block;
+    padding:10px;
+    border-radius:10px;
+    color:var(--text);
+    font-weight:800;
+    margin-bottom:6px;
+    background:var(--offcanvas-link-bg);
+    border: 0;
+  }
 
   /* small screens */
   @media(max-width:720px){
@@ -189,10 +222,13 @@
     .main-grid{grid-template-columns:1fr}
     .hero {padding:20px}
     .h1{font-size:26px}
+    .offcanvas { right:8px; top:8px; width:92vw; max-width:none; }
   }
 </style>
 </head>
-<body class="dark">
+<!-- start with dark/light decided via JS, but set body initial to 'light' so site starts light by default
+     (JS will override if localStorage says a different theme). -->
+<body class="light">
   <div class="wrap">
     <!-- header -->
     <header>
@@ -206,7 +242,7 @@
 
       <div class="controls" role="navigation" aria-label="Header controls">
         <!-- theme: just icon -->
-        <button id="toggleTheme" class="theme-btn" title="Toggle theme" aria-pressed="true">🌙</button>
+        <button id="toggleTheme" class="theme-btn" title="Toggle theme" aria-pressed="false">☀️</button>
 
         <!-- hamburger: icon only -->
         <button id="openMenu" class="hamb" aria-controls="menu" aria-expanded="false" title="Open menu">
@@ -356,7 +392,7 @@
           <div style="margin-top:14px">
             <h4 style="margin:0 0 6px 0">Quick settings</h4>
             <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-              <div style="background:var(--card-dark);padding:10px;border-radius:10px;font-weight:800">Theme: <span id="miniTheme">Dark</span></div>
+              <div style="background:var(--card-dark);padding:10px;border-radius:10px;font-weight:800">Theme: <span id="miniTheme">Light</span></div>
               <div style="background:var(--card-dark);padding:10px;border-radius:10px;font-weight:800">Privacy: Browser only</div>
               <div style="background:var(--card-dark);padding:10px;border-radius:10px;font-weight:800">Export: CSV / JSON</div>
             </div>
@@ -402,16 +438,27 @@
   const toggle = document.getElementById('toggleTheme');
   const miniTheme = document.getElementById('miniTheme');
 
-  // init from localStorage or default dark
-  const saved = localStorage.getItem('pr-theme') || 'dark';
-  body.className = saved === 'light' ? 'light' : 'dark';
+  // INIT: prefer localStorage if set, otherwise default to LIGHT as requested
+  const saved = localStorage.getItem('pr-theme') || 'light';
+  if (saved === 'light') {
+    body.classList.remove('dark');
+    body.classList.add('light');
+  } else {
+    body.classList.remove('light');
+    body.classList.add('dark');
+  }
   updateThemeIcon();
 
+  // Toggle handler
   toggle.addEventListener('click', () => {
     if(body.classList.contains('light')){
-      body.classList.remove('light'); body.classList.add('dark'); localStorage.setItem('pr-theme','dark');
+      body.classList.remove('light');
+      body.classList.add('dark');
+      localStorage.setItem('pr-theme','dark');
     } else {
-      body.classList.remove('dark'); body.classList.add('light'); localStorage.setItem('pr-theme','light');
+      body.classList.remove('dark');
+      body.classList.add('light');
+      localStorage.setItem('pr-theme','light');
     }
     updateThemeIcon();
   });
@@ -420,21 +467,23 @@
     if(body.classList.contains('light')){
       toggle.textContent = '☀️';
       miniTheme.textContent = 'Light';
+      toggle.setAttribute('aria-pressed','false');
     } else {
       toggle.textContent = '🌙';
       miniTheme.textContent = 'Dark';
+      toggle.setAttribute('aria-pressed','true');
     }
   }
 
   // offcanvas menu
   const menu = document.getElementById('menu');
-  const openMenu = document.getElementById('openMenu');
+  const openMenuBtn = document.getElementById('openMenu');
   const closeMenu = document.getElementById('closeMenu');
-  openMenu.addEventListener('click', () => {
-    menu.classList.add('open'); menu.setAttribute('aria-hidden','false'); openMenu.setAttribute('aria-expanded','true');
+  openMenuBtn.addEventListener('click', () => {
+    menu.classList.add('open'); menu.setAttribute('aria-hidden','false'); openMenuBtn.setAttribute('aria-expanded','true');
   });
   closeMenu.addEventListener('click', () => {
-    menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); openMenu.setAttribute('aria-expanded','false');
+    menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); openMenuBtn.setAttribute('aria-expanded','false');
   });
 
   // start sample functions
