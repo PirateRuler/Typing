@@ -226,9 +226,9 @@
   }
 </style>
 </head>
-<!-- start with dark/light decided via JS, but set body initial to 'light' so site starts light by default
-     (JS will override if localStorage says a different theme). -->
-<body class="light">
+<!-- initial class here is 'light' so the site loads light by default.
+     JS will set the <html> class according to localStorage (and toggle it later). -->
+<body class="">
   <div class="wrap">
     <!-- header -->
     <header>
@@ -433,38 +433,38 @@
   // year
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // theme toggle: toggles between dark and light classes on <body>
-  const body = document.body;
+  // theme toggle: toggles between dark and light classes on <html> (not body)
+  const docEl = document.documentElement; // <html>
   const toggle = document.getElementById('toggleTheme');
   const miniTheme = document.getElementById('miniTheme');
 
   // INIT: prefer localStorage if set, otherwise default to LIGHT as requested
   const saved = localStorage.getItem('pr-theme') || 'light';
   if (saved === 'light') {
-    body.classList.remove('dark');
-    body.classList.add('light');
+    docEl.classList.remove('dark');
+    docEl.classList.add('light');
   } else {
-    body.classList.remove('light');
-    body.classList.add('dark');
+    docEl.classList.remove('light');
+    docEl.classList.add('dark');
   }
   updateThemeIcon();
 
-  // Toggle handler
+  // Toggle handler - toggles class on <html> so CSS theme vars apply
   toggle.addEventListener('click', () => {
-    if(body.classList.contains('light')){
-      body.classList.remove('light');
-      body.classList.add('dark');
+    if(docEl.classList.contains('light')){
+      docEl.classList.remove('light');
+      docEl.classList.add('dark');
       localStorage.setItem('pr-theme','dark');
     } else {
-      body.classList.remove('dark');
-      body.classList.add('light');
+      docEl.classList.remove('dark');
+      docEl.classList.add('light');
       localStorage.setItem('pr-theme','light');
     }
     updateThemeIcon();
   });
 
   function updateThemeIcon(){
-    if(body.classList.contains('light')){
+    if(docEl.classList.contains('light')){
       toggle.textContent = '☀️';
       miniTheme.textContent = 'Light';
       toggle.setAttribute('aria-pressed','false');
