@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Typing Test — PirateRuler.com</title>
+<meta name="description" content="Typing Test by PirateRuler — fast, privacy-first typing speed & accuracy tester. No tracking. Works in-browser." />
+<meta name="theme-color" content="#071225" />
+<link rel="icon" href="https://pirateruler.com/static/pr-logo.png" type="image/png">
+<link rel="apple-touch-icon" href="https://pirateruler.com/static/pr-logo.png">
+
+<style>
+  :root{
+    --bg:#f3f7fb; --card:#ffffff; --muted:#6b7480; --text:#0b2130;
+    --accent-start:#6b7dff; --accent-end:#0bb3ff;
+    --glass: rgba(11,17,28,0.04);
+    --radius:14px;
+    --shadow-lg: 0 18px 50px rgba(3,12,30,0.18), inset 0 1px 0 rgba(255,255,255,0.6);
+    --shadow-sm: 0 8px 24px rgba(3,12,30,0.08);
+  }
+  html.dark { --bg:#071225; --card:#061028; --muted:#98a7bf; --text:#e9f1ff; --glass: rgba(255,255,255,0.02); --accent-start:#5ab3ff; --accent-end:#6b7dff; --shadow-lg: 0 18px 50px rgba(0,0,0,0.6); --shadow-sm: 0 8px 24px rgba(0,0,0,0.45); }
+  html.ocean { --bg:#e8f7fb; --card:#ffffff; --muted:#4f6b75; --text:#063242; --glass: rgba(6,50,66,0.03); --accent-start:#00c2d1; --accent-end:#2b9fff; --shadow-lg: 0 18px 50px rgba(3,12,30,0.08); }
+  html.sunset { --bg:#fff6f8; --card:#fff; --muted:#7a6b77; --text:#2a1020; --glass: rgba(42,16,32,0.03); --accent-start:#ff7aa2; --accent-end:#ffb86b; --shadow-lg: 0 18px 50px rgba(50,10,20,0.06); }
+
+  *{box-sizing:border-box}
+  body{background:linear-gradient(180deg,var(--bg), #e9f6ff); font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; color:var(--text); margin:0; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1200px;margin:14px auto;padding:18px;}
+
+  header.header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; border-radius:14px; background:linear-gradient(90deg, rgba(107,125,255,0.06), rgba(11,179,255,0.02)); box-shadow:var(--shadow-sm); }
+  .brand {display:flex; align-items:center; gap:12px;}
+  .logo { width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900; background:linear-gradient(135deg,var(--accent-start),var(--accent-end)); color:white; font-size:18px; box-shadow:0 10px 30px rgba(11,123,255,0.12); flex-shrink:0; }
+  .brand-title {line-height:1}
+  .brand-title .title-strong {font-size:18px;font-weight:900;margin:0}
+  .brand-title .by {font-size:11px;color:var(--muted); margin-top:3px}
+  .header-actions {display:flex; gap:10px; align-items:center;}
+  .btn {padding:9px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+  .btn.theme {background:linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:white}
+  .hamb { width:44px;height:44px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid rgba(0,0,0,0.04) }
+
+  .theme-select { position:relative; }
+  .theme-list { position:absolute; right:0; top:48px; background:var(--card); border-radius:10px; box-shadow:var(--shadow-sm); padding:8px; display:none; min-width:140px; z-index:1000; }
+  .theme-list.open { display:block; }
+  .theme-item { padding:8px 10px; cursor:pointer; border-radius:8px; font-weight:700; color:var(--muted) }
+  .theme-item:hover{ background:linear-gradient(90deg, rgba(0,0,0,0.02), rgba(0,0,0,0.03)); color:var(--text) }
+
+  .sidebar { position:fixed; top:0; right:0; height:100vh; width:360px; max-width:94vw; transform:translateX(120%); transition:transform .28s cubic-bezier(.2,.9,.3,1); z-index:90; background:var(--card); box-shadow: -40px 0 80px rgba(2,8,20,0.25); padding:20px; border-left:1px solid rgba(0,0,0,0.04); overflow:auto; border-radius:0 0 0 14px; }
+  .sidebar.open { transform:translateX(0); }
+  .sidebar .close { display:flex; justify-content:flex-end }
+  .nav-list{margin-top:10px; display:flex; flex-direction:column; gap:12px}
+  .nav-list a{display:block;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02)); color:var(--text); font-weight:600}
+  .backup{margin-top:18px;color:var(--muted);font-size:13px}
+
+  .hero { margin-top:18px; padding:28px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96)); box-shadow:var(--shadow-lg); text-align:center; }
+  html.dark .hero { background:linear-gradient(180deg, rgba(1,6,12,0.6), rgba(2,8,16,0.6)); }
+  .hero .big { font-size:30px;font-weight:900;margin:0}
+  .hero .lead { color:var(--muted); margin-top:10px; max-width:960px; margin-left:auto; margin-right:auto }
+  .cta { margin-top:18px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+  .btn-cta { padding:16px 26px; border-radius:12px; font-weight:900; background:linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:white; box-shadow:0 10px 30px rgba(11,107,255,0.12); cursor:pointer; }
+  .btn-ghost { border:1px solid rgba(0,0,0,0.06); padding:12px 18px; border-radius:12px; background:transparent; color:var(--text); font-weight:700; cursor:pointer; }
+
+  .grid { display:grid; grid-template-columns: 2fr 1fr; gap:18px; margin-top:22px; align-items:start; }
+  @media (max-width:980px){ .grid{ grid-template-columns: 1fr } .sidebar{ width:94vw } }
+  .card { background:var(--card); border-radius:14px; padding:18px; box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); }
+  .features-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  @media(max-width:700px){ .features-grid{ grid-template-columns:1fr } }
+  .feature { padding:14px; border-radius:12px; background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02)); display:flex; gap:12px; align-items:center; }
+  .f-icon { width:48px;height:48px;border-radius:10px; display:flex;align-items:center;justify-content:center;color:white; font-weight:900; background:linear-gradient(135deg,var(--accent-start),var(--accent-end)) }
+
+  footer { margin-top:20px; padding:18px; border-radius:12px; background:linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.96)); text-align:center; box-shadow:var(--shadow-lg) }
+  .muted{color:var(--muted)} .spacer{height:8px}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <header class="header" role="banner" aria-label="Site header">
+    <div class="brand">
+      <a href="/" aria-label="Home" style="display:flex; align-items:center; gap:12px">
+        <div class="logo" aria-hidden="true">PR</div>
+        <div class="brand-title">
+          <div class="title-strong">Typing Test</div>
+          <div class="by">by PirateRuler.com</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="header-actions" role="navigation" aria-label="Header controls">
+      <div class="theme-select" id="themeSelectWrap">
+        <button id="themeBtn" class="btn theme" title="Theme">Ocean</button>
+        <div id="themeList" class="theme-list" aria-hidden="true">
+          <div class="theme-item" data-theme="light">Light</div>
+          <div class="theme-item" data-theme="dark">Dark</div>
+          <div class="theme-item" data-theme="ocean">Ocean</div>
+          <div class="theme-item" data-theme="sunset">Sunset</div>
+        </div>
+      </div>
+      <div class="hamb" id="hambBtn" title="Open menu" aria-haspopup="true" aria-controls="sidebar" aria-expanded="false">☰</div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <h1 id="heroTitle" class="big">Typing Test — Speed & Accuracy, Instant</h1>
+    <p class="lead">Measure your typing speed (WPM) and accuracy. Privacy-first: everything runs in your browser, nothing is stored on our servers. Great for practice, interviews, or friendly competitions.</p>
+
+    <div class="cta" role="group" aria-label="Main call to actions">
+      <a class="btn-cta" href="typing-test.html">Start Typing Test</a>
+      <button class="btn-ghost" id="learnBtn">How it works</button>
+    </div>
+  </section>
+
+  <!-- MAIN GRID -->
+  <main class="grid" role="main">
+    <!-- LEFT: main content -->
+    <div>
+      <section class="card" aria-labelledby="featuresTitle">
+        <h2 id="featuresTitle">Why use PirateRuler Typing Test?</h2>
+        <p class="muted">Fast, reliable, privacy-first — works offline in the browser, no login, no tracking. Perfect for learners, streamers, and hiring tests.</p>
+
+        <div class="features-grid" style="margin-top:12px">
+          <div class="feature">
+            <div class="f-icon">⚡</div>
+            <div>
+              <div style="font-weight:900">Instant</div>
+              <div class="muted" style="font-size:13px">Load fast, run tests locally — no server roundtrips.</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="f-icon" style="background:linear-gradient(135deg,#8ee36b,#2bbf6f)">🔒</div>
+            <div>
+              <div style="font-weight:900">Private</div>
+              <div class="muted" style="font-size:13px">All typing data stays in your browser, nothing is uploaded.</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="f-icon" style="background:linear-gradient(135deg,#c471ed,#7bffdd)">🏅</div>
+            <div>
+              <div style="font-weight:900">Accurate scoring</div>
+              <div class="muted" style="font-size:13px">Per-character accuracy + WPM + error breakdown.</div>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="f-icon" style="background:linear-gradient(135deg,#7bd6ff,#6b7dff)">🎯</div>
+            <div>
+              <div style="font-weight:900">Practice modes</div>
+              <div class="muted" style="font-size:13px">Timed test, 60s/120s/300s, and custom text sets.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px">
+          <h3 style="margin:0 0 8px 0">Quick start</h3>
+          <ol style="margin:0;padding-left:18px" class="muted">
+            <li>Click <strong>Start Typing Test</strong></li>
+            <li>Pick time or custom text</li>
+            <li>Type — view WPM & accuracy at the end</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:14px">
+        <h2 style="margin:0 0 8px 0">Practice examples</h2>
+        <p class="muted">Try short drills or long passages. Use the test page to paste your own text.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px">
+          <button class="btn-ghost" onclick="goWithText('The quick brown fox jumps over the lazy dog')">Quick pangram</button>
+          <button class="btn-ghost" onclick="goWithText('Typing improves with steady daily practice and short sessions')">Practice phrase</button>
+          <button class="btn-ghost" onclick="goWithText('Technology changes quickly; practice keeps your skills sharp')">Tech line</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- RIGHT: side panel -->
+    <aside>
+      <div class="card" role="complementary" aria-label="Sidebar">
+        <h3 style="margin-top:0">Get the most</h3>
+        <p class="muted">Pro tips & quick settings</p>
+
+        <div style="margin-top:10px; display:grid; gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:800">Theme</div>
+            <div class="muted" id="currentTheme">Ocean</div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:800">Safe & private</div>
+            <div class="muted">Browser only</div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:800">Export</div>
+            <div><button class="btn-ghost" onclick="alert('Export will be on finish screen')">Export results</button></div>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div style="border-top:1px solid rgba(0,0,0,0.04); padding-top:12px">
+          <div style="font-weight:900">Links</div>
+          <div class="nav-list" style="margin-top:8px">
+            <a href="https://www.pirateruler.com/post/about.html" target="_blank" rel="noopener noreferrer">About — PirateRuler</a>
+            <a href="https://www.pirateruler.com/post/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+            <a href="https://www.pirateruler.com/post/contact.html" target="_blank" rel="noopener noreferrer">Contact</a>
+            <a href="https://www.pirateruler.com/post/terms.html" target="_blank" rel="noopener noreferrer">Terms & Service</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <a class="visit" href="https://pirateruler.com" style="display:inline-block;padding:10px 18px;border-radius:999px;background:linear-gradient(90deg,#ff7aa2,#6b7dff);color:white;font-weight:800;">Visit PirateRuler.com</a>
+    <div style="height:10px"></div>
+    <small class="muted">© <span id="year"></span> PirateRuler — Typing Test. Privacy-first, browser-only.</small>
+  </footer>
+</div>
+
+<!-- Sidebar (off-canvas) -->
+<aside id="sidebar" class="sidebar" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="close"><button class="btn-ghost" id="closeSidebar">Close</button></div>
+  <h3>PirateRuler Quick Links</h3>
+  <p class="muted">If this site is offline, visit our backups & resources</p>
+  <nav class="nav-list" aria-label="PirateRuler quick links">
+    <a href="https://www.pirateruler.com/post/about.html" target="_blank" rel="noopener noreferrer">About — PirateRuler</a>
+    <a href="https://www.pirateruler.com/post/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+    <a href="https://www.pirateruler.com/post/contact.html" target="_blank" rel="noopener noreferrer">Contact</a>
+    <a href="https://www.pirateruler.com/post/terms.html" target="_blank" rel="noopener noreferrer">Terms & Service</a>
+  </nav>
+  <div class="backup muted" style="margin-top:14px">Backup & resources: <br><a href="https://pirateruler.com" target="_blank" rel="noopener noreferrer">pirateruler.com</a></div>
+</aside>
+
+<script>
+  // year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // theme logic (default ocean)
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('themeBtn');
+  const themeList = document.getElementById('themeList');
+  const themeSelectWrap = document.getElementById('themeSelectWrap');
+  const currentThemeLabel = document.getElementById('currentTheme');
+
+  function applyTheme(t){
+    ['dark','ocean','sunset'].forEach(c=> root.classList.remove(c));
+    if(t === 'dark'){ root.classList.add('dark'); localStorage.setItem('site-theme','dark'); themeBtn.textContent = 'Dark'; currentThemeLabel.textContent = 'Dark' }
+    else if(t === 'ocean'){ root.classList.add('ocean'); localStorage.setItem('site-theme','ocean'); themeBtn.textContent = 'Ocean'; currentThemeLabel.textContent = 'Ocean' }
+    else if(t === 'sunset'){ root.classList.add('sunset'); localStorage.setItem('site-theme','sunset'); themeBtn.textContent = 'Sunset'; currentThemeLabel.textContent = 'Sunset' }
+    else { localStorage.setItem('site-theme','light'); themeBtn.textContent = 'Light'; currentThemeLabel.textContent = 'Light' }
+  }
+  const saved = localStorage.getItem('site-theme');
+  if(saved) applyTheme(saved); else applyTheme('ocean');
+
+  themeBtn.addEventListener('click', ()=> {
+    themeList.classList.toggle('open');
+    themeList.setAttribute('aria-hidden', String(!themeList.classList.contains('open')));
+  });
+  themeList.addEventListener('click', e => {
+    const t = e.target.closest('.theme-item'); if(!t) return;
+    applyTheme(t.dataset.theme);
+    themeList.classList.remove('open'); themeList.setAttribute('aria-hidden','true');
+  });
+  document.addEventListener('click', e => {
+    if(!themeSelectWrap.contains(e.target)) { themeList.classList.remove('open'); themeList.setAttribute('aria-hidden','true'); }
+  });
+
+  // sidebar open/close
+  const sidebar = document.getElementById('sidebar');
+  const hambBtn = document.getElementById('hambBtn');
+  const closeSidebar = document.getElementById('closeSidebar');
+  function openSidebar(){ sidebar.classList.add('open'); sidebar.setAttribute('aria-hidden','false'); hambBtn.setAttribute('aria-expanded','true'); closeSidebar.focus(); }
+  function closeSB(){ sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true'); hambBtn.setAttribute('aria-expanded','false'); }
+  hambBtn.addEventListener('click', openSidebar);
+  closeSidebar.addEventListener('click', closeSB);
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSB(); });
+
+  // "How it works" quick modal (simple)
+  document.getElementById('learnBtn').addEventListener('click', ()=> {
+    alert('How it works:\\n\\nClick Start Typing Test → choose duration or paste text → type the displayed text. Results show WPM & accuracy. Everything runs locally.');
+  });
+
+  // quick "start with text" function — opens typing-test.html with encoded text param
+  function goWithText(txt){
+    const url = new URL(window.location.href);
+    const target = (url.origin + '/typing-test.html') + '?q=' + encodeURIComponent(txt);
+    window.location.href = target;
+  }
+</script>
+</body>
+</html>
