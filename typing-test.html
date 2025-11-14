@@ -7,7 +7,6 @@
 <meta name="description" content="Typing Test by PirateRuler — fast, privacy-first typing speed & accuracy tester. No tracking. Works in-browser." />
 <meta name="theme-color" content="#071225" />
 <style>
-  /* --- theme tokens (keeps same variables approach as main site) --- */
   :root{
     --accent-a: #6b7dff;
     --accent-b: #7b4bff;
@@ -44,37 +43,53 @@
 
   .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
   .brand {display:flex;gap:12px;align-items:center}
-  .logo{width:54px;height:54px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));color:#fff;font-weight:900}
+  .logo{width:54px;height:54px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-b),var(--accent-a));color:#fff;font-weight:900}
   .brand h1{margin:0;font-size:18px}
   .brand p{margin:0;font-size:12px;color:var(--muted)}
 
   .controls {display:flex;gap:8px;align-items:center}
 
-  /* main layout */
   .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
   @media(max-width:980px){ .grid{grid-template-columns:1fr} }
 
-  /* left area test card */
   .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(2,8,20,0.25)}
   .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,0.04);color:var(--muted);font-weight:700;margin-bottom:12px}
 
   .title{font-weight:900;font-size:20px;margin:0 0 8px 0}
   .desc{color:var(--muted);margin:0 0 12px 0}
 
-  /* test area */
-  #passageBox{min-height:120px;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02));margin-bottom:12px;overflow:auto}
+  /* BIG text styling you requested */
+  #passageBox{
+    min-height:160px;
+    padding:18px;
+    border-radius:10px;
+    border:1px solid rgba(0,0,0,0.06);
+    background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02));
+    margin-bottom:12px;
+    overflow:auto;
+    font-size:26px;            /* bigger text */
+    line-height:1.35;
+    font-weight:700;
+    text-wrap:balance;
+    white-space:pre-wrap;
+  }
   #passageBox mark.correct{background:transparent;color:var(--text)}
   #passageBox mark.incorrect{background:rgba(255,80,80,0.12); color:inherit}
-  #passageBox mark.current{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#fff;padding:2px 4px;border-radius:6px}
+  #passageBox mark.current{
+    background:linear-gradient(90deg,var(--accent-b),var(--accent-a));
+    color:#fff;
+    padding:4px 6px;
+    border-radius:8px;
+    font-size:28px;           /* make current char slightly larger */
+  }
 
   .input-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
   #typedInput{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:16px}
   .small{font-size:13px;color:var(--muted)}
 
-  /* timer + actions */
   .actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
   .btn{padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:800}
-  .btn-primary{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#fff}
+  .btn-primary{background:linear-gradient(90deg,var(--accent-b),var(--accent-a));color:#fff}
   .btn-muted{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted)}
 
   .stats{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
@@ -82,11 +97,9 @@
   .stat .n{font-weight:900;font-size:18px}
   .stat .l{font-size:12px;color:var(--muted)}
 
-  /* presets / controls */
   .controls-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
   select,input[type="number"]{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,0.06)}
 
-  /* keyboard area */
   .keyboard-wrap{margin-top:12px}
   .kb-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px}
   .key{
@@ -97,10 +110,9 @@
   }
   .key.small{min-width:28px;padding:6px}
   .key.wide{min-width:70px}
-  .key.active{outline:3px solid rgba(107,125,255,0.22);transform:translateY(-3px)}
+  .key.active{outline:3px solid rgba(123,75,255,0.22);transform:translateY(-3px)}
   .key.err{background:rgba(255,80,80,0.12);border-color:rgba(255,80,80,0.16)}
 
-  /* right column */
   .side .panel{background:var(--card);padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
   .side h3{margin:0 0 8px 0}
   .option{display:flex;gap:8px;align-items:center;margin-bottom:8px}
@@ -108,10 +120,10 @@
 
   .footer-note{font-size:12px;color:var(--muted);margin-top:14px}
 
-  /* responsive tweaks */
   @media(max-width:520px){
     .kb-row{flex-wrap:wrap}
     .grid{grid-template-columns:1fr}
+    #passageBox{font-size:20px}
   }
 </style>
 </head>
@@ -138,7 +150,7 @@
         <div class="card" aria-labelledby="testTitle">
           <div class="kicker">Practice examples</div>
           <h2 class="title" id="testTitle">Typing Test — Instant</h2>
-          <p class="desc">Choose a preset or paste your own text. Use start/pause/reset. Results remain local unless you export them.</p>
+          <p class="desc">Choose a preset, paste your own text, or click Random Passage to cycle through a large pool of passages.</p>
 
           <div id="passageBox" role="region" aria-live="polite"></div>
 
@@ -153,10 +165,11 @@
             <button id="resetBtn" class="btn btn-muted">Reset</button>
             <button id="redoBtn" class="btn btn-muted">Redo</button>
 
-            <div style="flex:1"></div>
+            <!-- RANDOM PASSAGE button added -->
+            <button id="randomBtn" class="btn btn-muted">Random Passage</button>
 
-            <button id="exportBtn" class="btn btn-muted">Export CSV</button>
-            <button id="copyBtn" class="btn btn-muted">Copy Summary</button>
+            <div style="flex:1"></div>
+            <!-- Export / Copy removed as requested -->
           </div>
 
           <div class="stats" aria-live="polite">
@@ -189,13 +202,11 @@
             <label style="display:flex;align-items:center;gap:6px"><input id="muteToggle" type="checkbox" /> <span class="small">Mute</span></label>
           </div>
 
-          <div style="margin-top:12px" class="small muted">
-            <div>Tip: Click "Start" then focus the input field (the field auto-focuses on start). Use <strong>Redo</strong> to restart with same passage & duration.</div>
+          <div class="small muted" style="margin-top:12px">
+            <div>Tip: Click "Start" then focus the input field (it will auto-focus when starting). Use <strong>Random Passage</strong> to try different texts.</div>
           </div>
 
-          <!-- keyboard visual -->
           <div class="keyboard-wrap" aria-hidden="false">
-            <!-- we'll render rows via JS -->
             <div id="keyboard" aria-hidden="false"></div>
           </div>
 
@@ -212,7 +223,6 @@
               <label class="small">Keyboard layout</label><br/>
               <select id="layoutSel">
                 <option value="qwerty">QWERTY</option>
-                <!-- future: add other layouts -->
               </select>
             </div>
           </div>
@@ -223,7 +233,7 @@
               <select id="kbColor">
                 <option value="gray">Gray</option>
                 <option value="blue">Blue</option>
-                <option value="purple">Purple</option>
+                <option value="purple" selected>Purple</option> <!-- default purple -->
               </select>
             </div>
           </div>
@@ -243,26 +253,22 @@
           <h3 style="margin-top:8px">Session history</h3>
           <div id="history" class="small muted">No sessions yet.</div>
 
-          <div class="footer-note">Results are kept in your browser only. Export to save or share.</div>
+          <div class="footer-note">Results are kept in your browser only.</div>
         </div>
       </aside>
     </div>
   </div>
 
 <script>
-/* Typing Test logic (self-contained, no external libs) */
+/* Reduced & updated typing test script per your requests. Export / copy removed. Random passage pool (50). */
 
-/* -------------------------
-   Helpers & state
-   ------------------------- */
 const passageBox = document.getElementById('passageBox');
 const typedInput = document.getElementById('typedInput');
 const startBtn = document.getElementById('startBtn');
 const pauseBtn = document.getElementById('pauseBtn');
 const resetBtn = document.getElementById('resetBtn');
 const redoBtn = document.getElementById('redoBtn');
-const exportBtn = document.getElementById('exportBtn');
-const copyBtn = document.getElementById('copyBtn');
+const randomBtn = document.getElementById('randomBtn');
 
 const wpmEl = document.getElementById('wpm');
 const accEl = document.getElementById('acc');
@@ -283,7 +289,7 @@ const historyEl = document.getElementById('history');
 const themeToggle = document.getElementById('themeToggle');
 
 let timer = null;
-let remaining = 60; // seconds
+let remaining = 60;
 let running = false;
 let startTime = null;
 let elapsed = 0;
@@ -291,10 +297,8 @@ let typed = '';
 let errors = 0;
 let charIndex = 0;
 let targetText = '';
-let lastSnapshot = null;
 let sessions = [];
 
-/* audio for keypress (very small click) */
 const keyAudio = (() => {
   const ctx = (window.AudioContext || window.webkitAudioContext) ? new (window.AudioContext || window.webkitAudioContext)() : null;
   return {
@@ -313,15 +317,67 @@ const keyAudio = (() => {
   }
 })();
 
-/* default passages */
+/* default passages + 50 random-ish passages */
 const PASSES = {
   pangram: "The quick brown fox jumps over the lazy dog.",
   practice: "Practice daily: consistency beats intensity when learning to type. Short focused drills win.",
   tech: "Technology moves fast. Build resilient systems, write tests, and ship small improvements often.",
-  lorem: "A long sample passage to improve typing stamina. Try to keep a steady rhythm, focus on accuracy first, then speed. Breathe and avoid unnecessary jitter. Build progress by repeating short sessions daily."
+  lorem: "A long sample passage to improve typing stamina. Try to keep a steady rhythm, focus on accuracy first, then speed."
 };
 
-/* keyboard layout (QWERTY) - rows; keys are display value and code for highlighting */
+const RANDOM_POOL = [
+  "A steady rhythm matters more than frantic speed; practise short focused sessions daily.",
+  "Small steps compound: ten minutes every day will make you better in weeks, not years.",
+  "Type meaningful sentences rather than repeating single words — context helps accuracy.",
+  "Practice with mixed punctuation: commas, periods, brackets and quotes help finger accuracy.",
+  "Speed is the result of consistent accuracy. Slow down to go fast later.",
+  "The developer fixed the bug, wrote a test, and deployed the patch during lunch.",
+  "Design patterns are useful tools but overuse creates rigid code. Use them judiciously.",
+  "A clean working environment reduces distractions and helps maintain a steady typing rhythm.",
+  "Breathe, sit straight, and relax your shoulders — posture affects long sessions.",
+  "The quick learner balances speed with deliberate practice and error analysis.",
+  "Short bursts of focused typing are superior to long unfocused sessions.",
+  "Keyboard shortcuts save time. Learn them and your workflow will improve.",
+  "Consistent practice, small goals, and periodic reviews are the key to progression.",
+  "Collaborate, share feedback, and iterate — improvement accelerates with community input.",
+  "Write clear sentences; clarity in thought produces clarity in typing.",
+  "A good typing habit is the foundation of efficient communication and coding.",
+  "Train to look at the screen, not the keyboard. Vision anchors rhythm.",
+  "Use different passages to avoid pattern memorization and improve generalization.",
+  "Focus on the weak keys: isolate and train problem letters until they improve.",
+  "When learning, it's fine to make mistakes — correct them deliberately afterwards.",
+  "A rhythm that matches your breathing produces the most consistent speed.",
+  "Measure progress with short tests every few days, not once a month.",
+  "Avoid tense fingers; relaxed hands will be faster and less error-prone.",
+  "Alternate between accuracy drills and speed sprints to build both skills.",
+  "Backspace is a tool — use it sparingly; training to avoid mistakes is better.",
+  "Punctuation mastery increases real-world typing performance significantly.",
+  "The most common letters appear frequently; train them until effortless.",
+  "Switch passages to keep your brain engaged and avoid habituation.",
+  "Practice words of mixed length; medium-sized words dominate real text.",
+  "React to your errors: analyse which fingers and keys cause the most trouble.",
+  "Training with varied content reduces the chance of overfitting to a single passage.",
+  "Type out book paragraphs: longer context strengthens stamina and comprehension.",
+  "Transcribe spoken text to improve listening-to-typing speed and accuracy.",
+  "Write short stories as practice — creativity keeps sessions interesting.",
+  "A calm mind types better than a rushed one; slow down briefly to regain control.",
+  "Focus on consistent spacing and avoid double spaces after punctuation.",
+  "Type with intention: each session should have a clear small goal.",
+  "Short intervals of rest during long sessions prevent fatigue and errors.",
+  "Improve accuracy first; speed will follow when finger motion is efficient.",
+  "Practice shifting fingers smoothly between rows; transitions matter.",
+  "Learn to use non-dominant hand keys deliberately to remove hesitations.",
+  "Pair drills with audio cues to strengthen time-based consistency.",
+  "Use mixed-case and symbol-heavy passages to challenge real-world typing.",
+  "Typing templates (emails, code blocks) help when practising for specific tasks.",
+  "Train with foreign words occasionally to broaden finger responses.",
+  "Focus on removing small involuntary hand movements — they steal time.",
+  "Push for one more accurate line each session and measure the change.",
+  "Consistent tiny gains add up — 1% better per day compounds fast.",
+  "Keep sessions short and frequent; your brain remembers better this way."
+];
+
+/* keyboard layout */
 const QWERTY_ROWS = [
   ['`','1','2','3','4','5','6','7','8','9','0','-','=','Backspace'],
   ['Tab','q','w','e','r','t','y','u','i','o','p','[',']','\\'],
@@ -332,7 +388,7 @@ const QWERTY_ROWS = [
 
 const htmlEl = document.documentElement;
 
-/* Theme initialization & toggle: respect localStorage; keep in sync with main site */
+/* Theme init */
 (function initTheme(){
   const saved = localStorage.getItem('pr-theme') || 'light';
   htmlEl.classList.remove('light','dark');
@@ -347,13 +403,9 @@ themeToggle.addEventListener('click', () => {
   themeToggle.textContent = next === 'dark' ? 'Dark' : 'Light';
 });
 
-/* -------------------------
-   UI rendering
-   ------------------------- */
+/* UI render functions (no changes except bigger text already in CSS) */
 function renderPassage(str){
-  // show characters; mark correct/incorrect/current
   passageBox.innerHTML = '';
-  // escape
   const safe = String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   for(let i=0;i<safe.length;i++){
     const ch = safe[i];
@@ -372,7 +424,6 @@ function renderPassage(str){
     }
     passageBox.appendChild(span);
   }
-  // if typed is longer than passage, show remainder typed as incorrect
   if(typed.length > safe.length){
     const extra = document.createElement('mark');
     extra.classList.add('incorrect');
@@ -384,8 +435,7 @@ function renderPassage(str){
 function renderKeyboard(){
   const container = document.getElementById('keyboard');
   container.innerHTML = '';
-  const rows = QWERTY_ROWS;
-  rows.forEach(row=>{
+  QWERTY_ROWS.forEach(row=>{
     const rowDiv = document.createElement('div');
     rowDiv.className = 'kb-row';
     row.forEach(k=>{
@@ -394,7 +444,6 @@ function renderKeyboard(){
       if(k.length <= 2) key.classList.add('small');
       if(k === 'Backspace' || k === 'Enter' || k === 'Shift' || k === 'Space' || k === 'Tab' || k==='Caps') key.classList.add('wide');
       key.dataset.code = k.toLowerCase();
-      // display prettified label
       key.textContent = (k === 'Space') ? ' ' : k;
       rowDiv.appendChild(key);
     });
@@ -404,7 +453,7 @@ function renderKeyboard(){
 }
 
 function applyKeyboardColor(){
-  const color = kbColor.value;
+  const color = kbColor.value || 'purple';
   const keys = document.querySelectorAll('.key');
   keys.forEach(k=>{
     if(color === 'gray'){
@@ -412,6 +461,7 @@ function applyKeyboardColor(){
     } else if(color === 'blue'){
       k.style.background = 'linear-gradient(180deg, rgba(107,125,255,0.12), rgba(11,179,255,0.04))';
     } else {
+      // purple default
       k.style.background = 'linear-gradient(180deg, rgba(123,75,255,0.12), rgba(107,125,255,0.04))';
     }
   });
@@ -424,9 +474,7 @@ function setFontSize(){
   });
 }
 
-/* -------------------------
-   Input & typing logic
-   ------------------------- */
+/* set text from preset or custom */
 function setTargetFromPreset(preset){
   if(preset === 'custom'){
     const custom = prompt('Paste your custom passage (max 3000 chars):') || '';
@@ -440,7 +488,17 @@ function setTargetFromPreset(preset){
   renderPassage(targetText);
 }
 
-/* timing */
+/* random passage function: pick random from RANDOM_POOL (50) */
+function pickRandomPassage(){
+  const n = Math.floor(Math.random() * RANDOM_POOL.length);
+  targetText = RANDOM_POOL[n];
+  typed = '';
+  charIndex = 0;
+  errors = 0;
+  renderPassage(targetText);
+}
+
+/* duration handling */
 function setDurationFromSelect(){
   const v = durationSel.value;
   if(v === '0'){
@@ -453,11 +511,7 @@ function setDurationFromSelect(){
   }
   timerDisplay.textContent = remaining;
 }
-
-durationSel.addEventListener('change', () => {
-  setDurationFromSelect();
-});
-
+durationSel.addEventListener('change', setDurationFromSelect);
 customDuration.addEventListener('input', () => {
   const cd = parseInt(customDuration.value,10);
   if(!isNaN(cd) && cd > 0) {
@@ -475,7 +529,6 @@ function startTest(){
   startBtn.disabled = true;
   pauseBtn.disabled = false;
   typedInput.focus();
-  // start countdown if duration > 0 (0 means unlimited)
   if(parseInt(durationSel.value,10) !== 0 || customDuration.style.display !== 'inline-block'){
     if(timer) clearInterval(timer);
     timer = setInterval(()=> {
@@ -489,7 +542,6 @@ function startTest(){
       }
     }, 250);
   } else {
-    // no countdown, track elapsed only
     if(timer) clearInterval(timer);
     timer = setInterval(()=> {
       elapsed = Math.floor((Date.now() - startTime)/1000);
@@ -512,7 +564,6 @@ function stopTest(autoComplete=false){
   startBtn.disabled = false;
   pauseBtn.disabled = true;
   if(timer) clearInterval(timer);
-  // record session
   const session = {
     time: new Date().toISOString(),
     target: targetText.slice(0,200),
@@ -524,7 +575,6 @@ function stopTest(autoComplete=false){
   sessions.unshift(session);
   if(sessions.length > 10) sessions.pop();
   renderHistory();
-  // show summary
   if(autoComplete){
     alert(`Test finished — WPM: ${session.wpm}, Accuracy: ${session.accuracy}%`);
   }
@@ -553,10 +603,8 @@ function redoTest(){
 /* typing handling */
 function onUserInput(e){
   if(!targetText) return;
-  // allow only while running (but allow viewing and corrections)
   const val = e.target.value;
   typed = val;
-  // compute errors compared to target
   const safe = targetText;
   errors = 0;
   for(let i=0;i<typed.length;i++){
@@ -567,18 +615,12 @@ function onUserInput(e){
   renderPassage(targetText);
   updateStats();
 }
-
 typedInput.addEventListener('input', onUserInput);
 
-/* keyboard highlight on physical keys */
+/* keyboard highlight */
 document.addEventListener('keydown', (ev) => {
-  // ignore if modifier or in control combos (but still highlight)
   const key = ev.key.toLowerCase();
   highlightKey(key, true);
-  if(!running && (ev.key.length === 1 || ev.key === 'Backspace')) {
-    // if user typed outside start, still allow editing
-    // nothing special
-  }
   if(!muteToggle.checked) {
     if(ev.key.length === 1 || ev.key === 'Backspace' || ev.key === 'Enter') keyAudio.play();
   }
@@ -588,11 +630,10 @@ document.addEventListener('keyup', (ev) => {
   highlightKey(key, false);
 });
 
-/* virtual keyboard clicking support */
+/* virtual keyboard clicking */
 document.addEventListener('click', (ev) => {
   const k = ev.target.closest('.key');
   if(!k) return;
-  // map special keys
   const code = k.dataset.code;
   if(!code) return;
   if(code === 'backspace'){
@@ -616,23 +657,19 @@ document.addEventListener('click', (ev) => {
     return;
   }
   if(code === 'shift' || code === 'caps' || code === 'ctrl' || code === 'alt') return;
-  // normal keys
   typedInput.value += k.textContent.trim();
   typedInput.dispatchEvent(new Event('input'));
   if(!muteToggle.checked) keyAudio.play();
 });
 
-/* highlight helpers */
 function highlightKey(key, on){
   if(!key) return;
-  // unify space, backspace, enter
   let selectorKey = key;
   if(key === ' ') selectorKey = 'space';
   if(key === 'backspace') selectorKey = 'backspace';
   if(key === 'enter') selectorKey = 'enter';
   if(key === 'tab') selectorKey = 'tab';
   if(key === 'capslock') selectorKey = 'caps';
-  // find matching
   const all = document.querySelectorAll('.key');
   all.forEach(k=>{
     const code = k.dataset.code;
@@ -663,58 +700,7 @@ function updateStats(){
   errsEl.textContent = errors;
 }
 
-/* export results */
-exportBtn.addEventListener('click', () => {
-  const rows = [
-    ['time','target','chars','errors','wpm','accuracy']
-  ];
-  sessions.forEach(s=>{
-    rows.push([s.time, s.target.replace(/\n/g,' '), s.chars, s.errors, s.wpm, s.accuracy]);
-  });
-  // also add current session
-  rows.push([new Date().toISOString(), targetText.slice(0,120).replace(/\n/g,' '), typed.length, errors, calculateWPM(), calculateAccuracy()]);
-  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'typing-sessions.csv';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-});
-
-/* copy summary */
-copyBtn.addEventListener('click', async () => {
-  const text = `Typing Test — WPM: ${calculateWPM()}, Accuracy: ${calculateAccuracy()}%, Chars: ${typed.length}, Errors: ${errors}`;
-  try{
-    await navigator.clipboard.writeText(text);
-    alert('Summary copied to clipboard');
-  }catch(e){
-    prompt('Copy summary', text);
-  }
-});
-
-/* button wiring */
-startBtn.addEventListener('click', () => {
-  if(!targetText) setTargetFromPreset(presetSel.value);
-  startTest();
-});
-pauseBtn.addEventListener('click', pauseTest);
-resetBtn.addEventListener('click', () => { if(confirm('Reset test?')) resetTest(); });
-redoBtn.addEventListener('click', redoTest);
-
-/* preset selection logic */
-presetSel.addEventListener('change', () => {
-  setTargetFromPreset(presetSel.value);
-  resetTest();
-});
-
-/* layout/color/font options */
-kbColor.addEventListener('change', applyKeyboardColor);
-fontSizeSel.addEventListener('change', setFontSize);
-
-/* render history */
+/* history rendering */
 function renderHistory(){
   if(sessions.length === 0){
     historyEl.textContent = 'No sessions yet.';
@@ -732,37 +718,45 @@ function renderHistory(){
   });
 }
 
+/* event wiring */
+startBtn.addEventListener('click', () => {
+  if(!targetText) setTargetFromPreset(presetSel.value);
+  startTest();
+});
+pauseBtn.addEventListener('click', pauseTest);
+resetBtn.addEventListener('click', () => { if(confirm('Reset test?')) resetTest(); });
+redoBtn.addEventListener('click', redoTest);
+presetSel.addEventListener('change', () => { setTargetFromPreset(presetSel.value); resetTest(); });
+
+kbColor.addEventListener('change', applyKeyboardColor);
+fontSizeSel.addEventListener('change', setFontSize);
+
+/* RANDOM PASSAGE wiring */
+randomBtn.addEventListener('click', () => {
+  // choose random from pool (50). Each click picks a new random.
+  pickRandomPassage();
+  setDurationFromSelect();
+  resetTest();
+});
+
 /* initial render */
 (function init(){
-  // load saved theme already handled by main; ensure Start=light default
-  // prepare default passage
   setTargetFromPreset('pangram');
   setDurationFromSelect();
   renderKeyboard();
   setFontSize();
   updateStats();
-  // ensure typed input won't auto-correct or capitalize
   typedInput.setAttribute('autocorrect','off');
   typedInput.setAttribute('autocapitalize','off');
   typedInput.setAttribute('spellcheck','false');
-  // when focus typed input, move caret to end
-  typedInput.addEventListener('focus', (e) => {
-    const val = e.target.value;
-    e.target.value = '';
-    e.target.value = val;
-  });
-
-  // keyboard color default
-  applyKeyboardColor();
-
-  // load saved theme from localStorage if exists (already done by main site)
-  // ensure default mute = false
   muteToggle.checked = false;
+
+  // default keyboard color purple (as requested)
+  kbColor.value = 'purple';
+  applyKeyboardColor();
 })();
 
-/* keep visual passage in sync when window resized or scrolled */
 window.addEventListener('resize', () => renderPassage(targetText));
-
 </script>
 </body>
 </html>
