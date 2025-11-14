@@ -5,396 +5,353 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Typing Test — PirateRuler.com</title>
 <meta name="description" content="Typing Test by PirateRuler — fast, privacy-first typing speed & accuracy tester. No tracking. Works in-browser." />
-<meta name="theme-color" content="#071225" />
 <link rel="icon" href="https://pirateruler.com/static/pr-logo.png" type="image/png">
-<link rel="apple-touch-icon" href="https://pirateruler.com/static/pr-logo.png">
-
 <style>
   :root{
-    /* Light (default) */
-    --bg:#f3f7fb;
-    --page-bg: linear-gradient(180deg,#f7fbfe,#f3f7fb);
-    --card:#ffffff;
-    --muted:#6b7480;
-    --text:#071225;
-    --muted-weak: rgba(11,17,36,0.45);
-
-    --accent-start:#6b7dff;
-    --accent-end:#0bb3ff;
-
-    --glass: rgba(11,17,28,0.03);
-    --radius:14px;
-    --shadow-lg: 0 18px 50px rgba(3,12,30,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
-    --shadow-sm: 0 8px 24px rgba(3,12,30,0.04);
-
-    --header-height:78px;
-  }
-
-  html.dark {
-    --bg:#071225;
-    --page-bg: linear-gradient(180deg,#061028,#071225 60%);
-    --card:#061028;
+    --bg:#071225;                 /* dark fallback - main page background used for dark */
+    --card:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     --muted:#98a7bf;
     --text:#e9f1ff;
-    --muted-weak: rgba(233,241,255,0.12);
-
     --accent-start:#5ab3ff;
-    --accent-end:#7b5cff;
-
+    --accent-end:#6b7dff;
     --glass: rgba(255,255,255,0.02);
+    --radius:16px;
     --shadow-lg: 0 18px 50px rgba(0,0,0,0.6);
     --shadow-sm: 0 8px 24px rgba(0,0,0,0.45);
+    --max-width:980px;
+    --container-pad:18px;
+    --ui-gap:14px;
+  }
+  /* LIGHT THEME */
+  html.light {
+    --bg:#f5f8fb;
+    --card:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96));
+    --muted:#6b7480;
+    --text:#061028;
+    --accent-start:#6b7dff;
+    --accent-end:#0bb3ff;
+    --glass: rgba(6,50,66,0.03);
+    --shadow-lg: 0 18px 50px rgba(3,12,30,0.08);
+    --shadow-sm: 0 8px 24px rgba(3,12,30,0.06);
   }
 
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0;
-    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue";
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(18,22,35,0.45), transparent), var(--bg);
     color:var(--text);
-    background:var(--page-bg);
-    padding:16px;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   }
 
-  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--max-width);margin:20px auto;padding:var(--container-pad);}
 
-  .container{max-width:1100px;margin:0 auto; padding-bottom:40px;}
-
-  /* header */
-  header.header {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:12px;
-    border-radius:14px;
-    background:linear-gradient(90deg, rgba(107,125,255,0.03), rgba(11,179,255,0.01));
-    box-shadow:var(--shadow-sm);
+  /* Header - compact two-line title */
+  .header {
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding:12px;border-radius:14px;
+    background:var(--card);box-shadow:var(--shadow-sm);border:1px solid rgba(255,255,255,0.02);
   }
-
-  .brand {display:flex;gap:12px; align-items:center}
+  .brand {display:flex;align-items:center;gap:12px}
   .logo {
-    width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,var(--accent-start),var(--accent-end)); color:white; font-weight:800; font-size:18px;
-    box-shadow:0 8px 20px rgba(11,107,255,0.12);
-    flex-shrink:0;
+    width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    color:white;font-weight:800;background:linear-gradient(135deg,var(--accent-start),var(--accent-end));
+    flex-shrink:0;font-size:18px;
   }
   .brand-title {line-height:1}
-  .brand-title .title-strong {font-size:18px;font-weight:900;margin:0; color:var(--text)}
-  .brand-title .by {font-size:11px;color:var(--muted); margin-top:3px}
+  .brand-title .title-strong {font-weight:900;font-size:18px;margin:0}
+  .brand-title .by {font-size:12px;color:var(--muted);margin-top:4px}
 
   /* header controls */
-  .controls {display:flex; align-items:center; gap:12px}
-  .theme-toggle{
-    display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:999px; font-weight:800;
-    background:var(--card); box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04);
-    cursor:pointer;
+  .header-controls {display:flex;gap:10px;align-items:center}
+  .theme-toggle {
+    padding:9px 12px;border-radius:999px;border:none;background:transparent;color:var(--text);
+    font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,0.04);
   }
   .hamb {
-    width:56px;height:56px;border-radius:12px; background:var(--glass); display:flex; align-items:center; justify-content:center;
-    box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); cursor:pointer;
+    width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background:var(--glass);border:1px solid rgba(255,255,255,0.04);cursor:pointer;font-weight:700;
   }
-  .hamb svg{width:20px;height:20px; display:block; fill:none; stroke:currentColor; stroke-width:2}
 
-  /* hero */
+  /* Hero */
   .hero {
-    margin-top:18px;
-    padding:28px;
-    border-radius:16px;
-    background:var(--card);
-    box-shadow:var(--shadow-lg);
-    text-align:center;
+    margin-top:18px;padding:28px;border-radius:20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow:var(--shadow-lg);text-align:center;
   }
-  html.dark .hero { background: linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.15)); }
-  .hero .kicker {display:inline-block; padding:6px 12px; border-radius:999px; background:linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.02)); color:var(--muted); font-weight:700; font-size:13px}
-  .hero .big { font-size:34px; font-weight:900; margin:14px 0 8px; line-height:1.06; color:var(--text) }
-  .hero .lead { color:var(--muted); margin:0 auto; max-width:900px; font-size:15px }
+  html.light .hero { background: linear-gradient(180deg, rgba(255,255,255,1), rgba(255,255,255,0.98)); }
+  .hero .eyebrow{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,0.06);color:var(--muted);font-weight:700;font-size:12px}
+  .hero h1{font-size:32px;margin:18px 0 6px 0;font-weight:900;line-height:1.05}
+  .hero p.lead{max-width:820px;margin:0 auto;color:var(--muted);font-size:15px}
 
-  .cta-row { margin-top:18px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; align-items:center; }
-
-  .btn-primary { padding:16px 28px; border-radius:12px; font-weight:900; background:linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:white; box-shadow:0 12px 30px rgba(11,107,255,0.12); cursor:pointer; border:0; font-size:16px;}
-  .btn-ghost { padding:12px 18px; border-radius:12px; background:transparent; color:var(--muted); font-weight:700; border:1px solid rgba(0,0,0,0.04); cursor:pointer; }
-
-  /* layout */
-  .grid { display:grid; grid-template-columns: 2fr 1fr; gap:18px; margin-top:22px; align-items:start; }
-  @media (max-width:980px){ .grid{ grid-template-columns: 1fr } .header{padding:10px} }
-
-  .card { background:var(--card); border-radius:14px; padding:18px; box-shadow:var(--shadow-sm); border:1px solid rgba(0,0,0,0.04); }
-
-  /* features list - cards like QR site */
-  .features-grid { display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px; }
-  .feature {
-    display:flex; gap:12px; align-items:center; padding:18px; border-radius:12px;
-    background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));
-    border:1px solid rgba(0,0,0,0.03);
+  .cta-wrap{margin-top:18px;display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap}
+  .btn-primary {
+    padding:16px 28px;border-radius:14px;font-weight:900;background:linear-gradient(90deg,var(--accent-start),var(--accent-end));
+    color:white;border:none;cursor:pointer;box-shadow:0 10px 30px rgba(11,107,255,0.12);
   }
-  .f-icon { width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:900; color:white;
-    background:linear-gradient(135deg,var(--accent-start),var(--accent-end));
-  }
-  .feature h4{ margin:0; font-weight:900 }
-  .feature p{ margin:4px 0 0; color:var(--muted); font-size:14px }
+  .cta-pill { padding:12px 26px;border-radius:40px;background:linear-gradient(90deg,#ff7aa2,#6b7dff);color:white;font-weight:900 }
 
-  /* sidebar (off-canvas) */
+  /* Grid / cards */
+  .grid { display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:22px;align-items:start; }
+  @media (max-width:980px){ .grid{grid-template-columns:1fr} }
+  .card {
+    border-radius:14px;padding:18px;background:var(--card);box-shadow:var(--shadow-sm);border:1px solid rgba(255,255,255,0.02);
+  }
+
+  .features-grid { display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px }
+  @media(max-width:700px){ .features-grid{grid-template-columns:1fr} }
+  .feature { padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02)); display:flex;gap:12px;align-items:center }
+  .f-icon { width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;background:linear-gradient(135deg,var(--accent-start),var(--accent-end)) }
+
+  /* Sidebar style (off-canvas) */
   .sidebar {
-    position:fixed; top:16px; right:16px; height:calc(100vh - 32px); width:360px; max-width:92vw; transform:translateX(120%);
-    transition:transform .28s cubic-bezier(.2,.9,.3,1); z-index:120; background:var(--card); box-shadow: -40px 0 80px rgba(2,8,20,0.25);
-    padding:20px; border-radius:14px; border:1px solid rgba(0,0,0,0.04); overflow:auto;
+    position:fixed;top:0;right:0;height:100vh;width:360px;max-width:92vw;
+    transform:translateX(120%);transition:transform .28s cubic-bezier(.2,.9,.3,1);z-index:120;
+    background:var(--card);box-shadow:-40px 0 80px rgba(0,0,0,0.5);padding:20px;border-left:1px solid rgba(255,255,255,0.02);
+    border-radius:0 0 0 18px;overflow:auto;
   }
   .sidebar.open{ transform:translateX(0) }
-  .sidebar .close { display:flex; justify-content:flex-end }
-  .sidebar h3{ margin:0 0 8px; font-size:18px; font-weight:900 }
-  .sidebar .muted{ color:var(--muted); margin-bottom:12px }
-  .sidebar .link-list { display:flex; flex-direction:column; gap:8px; margin-top:10px }
-  .sidebar .link-list a { padding:12px; border-radius:10px; display:block; background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02)); font-weight:700; color:var(--text) }
+  .sidebar .close{display:flex;justify-content:flex-end}
+  .sidebar h3 {margin:0 0 8px 0}
+  .settings-list { display:flex;flex-direction:column;gap:10px;margin-top:8px }
+  .settings-row { display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.01), rgba(0,0,0,0.02)) }
+  .links-list a{display:block;padding:12px;border-radius:12px;margin-top:8px;background:rgba(0,0,0,0.02);color:var(--text);font-weight:700;text-decoration:none}
 
-  /* footer CTA single */
-  footer { margin-top:24px; text-align:center; }
-  .visit { display:inline-block; padding:12px 20px; border-radius:999px; background:linear-gradient(90deg,#ff7aa2,#6b7dff); color:white; font-weight:800; box-shadow:0 10px 30px rgba(107,125,255,0.12) }
+  /* Footer */
+  footer{margin-top:20px;padding:18px;border-radius:12px;text-align:center;background:var(--card);box-shadow:var(--shadow-lg)}
+  footer .muted{color:var(--muted)}
+  .spacer{height:8px}
 
   /* small helpers */
-  .muted{ color:var(--muted) }
-  .spacer{ height:8px }
+  .muted{color:var(--muted)}
+  .hidden{display:none}
+  /* buttons inside lists */
+  .btn-ghost { padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);cursor:pointer;font-weight:700}
 
-  /* responsive tweaks */
-  @media(max-width:520px){
-    .brand-title .title-strong { font-size:16px }
-    .hero .big { font-size:26px }
-    .hamb { width:48px;height:48px }
-    .logo { width:48px; height:48px; font-size:16px }
-    .sidebar { width:92vw }
-  }
+  /* Make the "feature card" look like QR site blocks */
+  .feature-card { padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01)); box-shadow:var(--shadow-sm); border:1px solid rgba(255,255,255,0.02); margin-bottom:12px }
+  .feature-card h4 { margin:0 0 6px 0;font-size:20px;font-weight:900 }
+  .feature-card p { margin:0;color:var(--muted) }
+
+  /* pill icon */
+  .pill-icon { width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;background:linear-gradient(135deg,var(--accent-start),var(--accent-end));margin:0 auto 10px auto }
+
+  /* small screens header title break */
+  .brand-title .title-strong { max-width:120px; display:inline-block; vertical-align:middle }
+  @media (max-width:400px){ .brand-title .title-strong { max-width:92px;font-size:16px } }
+
+  /* ensure good spacing for bottom nav (iPhone nav overlap) */
+  .page-bottom-spacer{height:26px}
 
 </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <header class="header" role="banner" aria-label="Site header">
-      <div class="brand">
-        <a href="/" aria-label="Home" style="display:flex; align-items:center; gap:12px">
-          <div class="logo" aria-hidden="true">PR</div>
-          <div class="brand-title">
-            <!-- allow two-line title (will wrap naturally) -->
-            <div class="title-strong">Typing Test</div>
-            <div class="by">by PirateRuler.com</div>
-          </div>
-        </a>
-      </div>
 
-      <div class="controls" role="navigation" aria-label="Header controls">
-        <!-- Theme toggle (only light / dark) -->
-        <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle theme">
-          <span id="themeIcon" aria-hidden="true">🌙</span>
-          <span id="themeLabel" style="font-weight:900">Dark</span>
-        </button>
+<div class="wrap" role="document">
+  <!-- Header -->
+  <header class="header" role="banner" aria-label="Site header">
+    <div class="brand">
+      <a href="/" aria-label="Home" style="display:flex; align-items:center; gap:12px">
+        <div class="logo" aria-hidden="true">PR</div>
+        <div class="brand-title">
+          <!-- two-line friendly title: keeps words from overflowing -->
+          <div class="title-strong">Typing<br>Test</div>
+          <div class="by">by PirateRuler.com</div>
+        </div>
+      </a>
+    </div>
 
-        <!-- hamburger (icon only, no "Menu" text) -->
-        <button id="hambBtn" class="hamb" title="Open menu" aria-haspopup="true" aria-controls="sidebar" aria-expanded="false">
-          <!-- simple 3-line icon -->
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
-    </header>
+    <div class="header-controls" role="navigation" aria-label="Header controls">
+      <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle theme">Dark</button>
+      <!-- hamburger only (no label) -->
+      <button id="hambBtn" class="hamb" aria-label="Open menu" aria-haspopup="true" aria-expanded="false">☰</button>
+    </div>
+  </header>
 
-    <!-- HERO -->
-    <section class="hero" aria-labelledby="heroTitle">
-      <div class="kicker">Trusted by developers & learners</div>
-      <h1 id="heroTitle" class="big">Measure typing speed & accuracy — private, instant</h1>
-      <p class="lead">Practice with short drills or long passages. Browser-only tests (no accounts, no tracking). Perfect for streamers, students, and hiring tests.</p>
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <div style="display:flex;justify-content:center"><span class="eyebrow">Trusted by developers & learners</span></div>
+    <h1 id="heroTitle">Measure typing speed & accuracy — private, instant</h1>
+    <p class="lead">Practice with short drills or long passages. Browser-only tests (no accounts, no tracking). Perfect for streamers, students, and hiring tests.</p>
 
-      <div class="cta-row" role="group" aria-label="Main call to actions">
-        <a class="btn-primary" href="typing-test.html">Start Typing Test — Free</a>
-        <!-- removed "How it works" as requested -->
-      </div>
-    </section>
+    <div class="cta-wrap" role="group" aria-label="Main call to actions">
+      <a class="btn-primary" href="typing-test.html">Start Typing Test — Free</a>
+      <!-- removed "How it works" button per request -->
+      <a class="cta-pill" href="https://pirateruler.com">Visit PirateRuler.com</a>
+    </div>
+  </section>
 
-    <!-- MAIN GRID -->
-    <main class="grid" role="main">
-      <!-- LEFT: main content -->
-      <div>
-        <section class="card" aria-labelledby="featuresTitle">
-          <h2 id="featuresTitle">Why use PirateRuler Typing Test?</h2>
-          <p class="muted">Fast, reliable, privacy-first — runs in your browser, no login, no tracking.</p>
+  <!-- MAIN GRID -->
+  <main class="grid" role="main">
+    <!-- LEFT: main content -->
+    <div>
+      <section class="card" aria-labelledby="featuresTitle">
+        <h2 id="featuresTitle">Why use PirateRuler Typing Test?</h2>
+        <p class="muted">Fast, reliable, privacy-first — runs fully in the browser. No login. No tracking.</p>
 
-          <div class="features-grid" style="margin-top:14px">
-            <div class="feature">
-              <div class="f-icon">⚡</div>
+        <div class="features-grid" style="margin-top:12px">
+          <div class="feature-card">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="pill-icon">⚡</div>
               <div>
                 <h4>Instant</h4>
-                <p>Load fast, run tests locally — no server roundtrips.</p>
+                <p class="muted">Load fast, run tests locally — no server roundtrips.</p>
               </div>
             </div>
+          </div>
 
-            <div class="feature">
-              <div class="f-icon" style="background:linear-gradient(135deg,#8ee36b,#2bbf6f)">🔒</div>
+          <div class="feature-card">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="pill-icon" style="background:linear-gradient(135deg,#8ee36b,#2bbf6f)">🔒</div>
               <div>
                 <h4>Private</h4>
-                <p>All typing data stays in your browser — nothing is uploaded.</p>
+                <p class="muted">All typing data stays in your browser, nothing is uploaded.</p>
               </div>
             </div>
+          </div>
 
-            <div class="feature">
-              <div class="f-icon" style="background:linear-gradient(135deg,#c471ed,#7bffdd)">🏅</div>
+          <div class="feature-card">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="pill-icon" style="background:linear-gradient(135deg,#c471ed,#7bffdd)">🏅</div>
               <div>
                 <h4>Accurate scoring</h4>
-                <p>Per-character accuracy, WPM, and error breakdown.</p>
+                <p class="muted">Per-character accuracy + WPM + error breakdown.</p>
               </div>
             </div>
+          </div>
 
-            <div class="feature">
-              <div class="f-icon" style="background:linear-gradient(135deg,#7bd6ff,#6b7dff)">🎯</div>
+          <div class="feature-card">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="pill-icon" style="background:linear-gradient(135deg,#7bd6ff,#6b7dff)">🎯</div>
               <div>
                 <h4>Practice modes</h4>
-                <p>Timed tests (30/60/120s) and daily drills.</p>
+                <p class="muted">Timed tests (30/60/120s) and custom text sets.</p>
               </div>
-            </div>
-          </div>
-
-          <div style="margin-top:18px">
-            <h3 style="margin:0 0 8px 0">Quick start</h3>
-            <ol style="margin:0;padding-left:18px" class="muted">
-              <li>Click <strong>Start Typing Test</strong></li>
-              <li>Pick a duration or paste your text</li>
-              <li>Type — view WPM & accuracy at the end</li>
-            </ol>
-          </div>
-        </section>
-
-        <section class="card" style="margin-top:14px">
-          <h2 style="margin:0 0 8px 0">Practice examples</h2>
-          <p class="muted">Tap any preset or paste your own text on the test page.</p>
-          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px">
-            <button class="btn-ghost" onclick="goWithText('The quick brown fox jumps over the lazy dog')">Pangram — 30s</button>
-            <button class="btn-ghost" onclick="goWithText('Typing improves with steady daily practice and short sessions')">Practice phrase — 60s</button>
-            <button class="btn-ghost" onclick="goWithText('Technology changes quickly; practice keeps your skills sharp')">Tech line — 60s</button>
-            <button class="btn-ghost" onclick="goWithText('Long practice passage for focusing on accuracy and stamina in typing tests')">Long drill — 120s</button>
-          </div>
-        </section>
-      </div>
-
-      <!-- RIGHT: side panel preview / quick settings summary -->
-      <aside>
-        <div class="card" role="complementary" aria-label="Sidebar">
-          <h3 style="margin-top:0">Get the most</h3>
-          <p class="muted">Pro tips & quick settings</p>
-
-          <div style="margin-top:10px; display:grid; gap:10px">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div style="font-weight:800">Theme</div>
-              <div class="muted" id="currentTheme">Dark</div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div style="font-weight:800">Privacy</div>
-              <div class="muted">Browser only</div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div style="font-weight:800">Export</div>
-              <div><button class="btn-ghost" onclick="alert('Export will be on finish screen')">Export</button></div>
-            </div>
-          </div>
-
-          <div style="height:14px"></div>
-
-          <div style="border-top:1px solid rgba(0,0,0,0.04); padding-top:12px">
-            <div style="font-weight:900">Links</div>
-            <div class="link-list" style="margin-top:8px">
-              <a href="https://www.pirateruler.com/post/about.html" target="_blank" rel="noopener noreferrer">About — PirateRuler</a>
-              <a href="https://www.pirateruler.com/post/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-              <a href="https://www.pirateruler.com/post/contact.html" target="_blank" rel="noopener noreferrer">Contact</a>
-              <a href="https://www.pirateruler.com/post/terms.html" target="_blank" rel="noopener noreferrer">Terms & Service</a>
             </div>
           </div>
         </div>
-      </aside>
-    </main>
+      </section>
 
-    <footer>
-      <a class="visit" href="https://pirateruler.com" target="_blank" rel="noopener noreferrer">Visit PirateRuler.com</a>
-      <div class="spacer"></div>
-      <small class="muted">© <span id="year"></span> PirateRuler — Typing Test. Privacy-first, browser-only.</small>
-    </footer>
-  </div>
+      <section class="card" style="margin-top:14px">
+        <h2 style="margin:0 0 8px 0">Practice examples</h2>
+        <p class="muted">Tap any preset or paste your text on the test page.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px">
+          <button class="btn-ghost" onclick="goWithText('The quick brown fox jumps over the lazy dog')">Pangram — 30s</button>
+          <button class="btn-ghost" onclick="goWithText('Typing improves with steady daily practice and short sessions')">Practice phrase — 60s</button>
+          <button class="btn-ghost" onclick="goWithText('Technology changes quickly; practice keeps your skills sharp')">Tech line — 60s</button>
+          <button class="btn-ghost" onclick="goWithText('Long drill text for 120 seconds of continuous typing practice')">Long drill — 120s</button>
+        </div>
+      </section>
+    </div>
 
-  <!-- Sidebar (off-canvas) -->
-  <aside id="sidebar" class="sidebar" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="close"><button class="btn-ghost" id="closeSidebar">Close</button></div>
-    <h3>PirateRuler Quick Links</h3>
-    <p class="muted">If this site is offline, visit our backups & resources</p>
-    <nav class="link-list" aria-label="PirateRuler quick links">
-      <a href="https://www.pirateruler.com/post/about.html" target="_blank" rel="noopener noreferrer">About — PirateRuler</a>
-      <a href="https://www.pirateruler.com/post/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-      <a href="https://www.pirateruler.com/post/contact.html" target="_blank" rel="noopener noreferrer">Contact</a>
-      <a href="https://www.pirateruler.com/post/terms.html" target="_blank" rel="noopener noreferrer">Terms & Service</a>
-    </nav>
-    <div style="height:12px"></div>
-    <div class="muted">Backup & resources: <br><a href="https://pirateruler.com" target="_blank" rel="noopener noreferrer">pirateruler.com</a></div>
-  </aside>
+    <!-- RIGHT: side panel -->
+    <aside>
+      <div class="card" role="complementary" aria-label="Sidebar">
+        <h3 style="margin-top:0">Get the most</h3>
+        <p class="muted">Pro tips & quick settings</p>
+
+        <div class="settings-list" style="margin-top:10px">
+          <div class="settings-row">
+            <div style="font-weight:800">Theme</div>
+            <div class="muted" id="currentThemeLabel">Dark</div>
+          </div>
+
+          <div class="settings-row">
+            <div style="font-weight:800">Privacy</div>
+            <div class="muted">Browser only</div>
+          </div>
+
+          <div class="settings-row" style="justify-content:space-between;align-items:center">
+            <div style="font-weight:800">Export</div>
+            <button class="btn-ghost" onclick="alert('Export will be available on finish screen')">Export</button>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+
+        <div style="border-top:1px solid rgba(255,255,255,0.02); padding-top:12px">
+          <div style="font-weight:900">Links</div>
+          <div class="links-list" style="margin-top:8px">
+            <a href="https://www.pirateruler.com/post/about.html" target="_blank" rel="noopener noreferrer">About — PirateRuler</a>
+            <a href="https://www.pirateruler.com/post/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+            <a href="https://www.pirateruler.com/post/contact.html" target="_blank" rel="noopener noreferrer">Contact</a>
+            <a href="https://www.pirateruler.com/post/terms.html" target="_blank" rel="noopener noreferrer">Terms & Service</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <a class="cta-pill" href="https://pirateruler.com" style="display:inline-block">Visit PirateRuler.com</a>
+    <div class="spacer"></div>
+    <small class="muted">© <span id="year"></span> PirateRuler — Typing Test. Privacy-first, browser-only.</small>
+  </footer>
+  <div class="page-bottom-spacer"></div>
+</div>
+
+<!-- Sidebar (off-canvas QR-like) -->
+<aside id="sidebar" class="sidebar" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="close"><button class="btn-ghost" id="closeSidebar">Close</button></div>
+  <h3>PirateRuler Quick Links</h3>
+  <p class="muted">If this site is offline, visit our backups & resources</p>
+  <nav class="nav-list" aria-label="PirateRuler quick links">
+    <a href="https://www.pirateruler.com/post/about.html" target="_blank" rel="noopener noreferrer">About — PirateRuler</a>
+    <a href="https://www.pirateruler.com/post/privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+    <a href="https://www.pirateruler.com/post/contact.html" target="_blank" rel="noopener noreferrer">Contact</a>
+    <a href="https://www.pirateruler.com/post/terms.html" target="_blank" rel="noopener noreferrer">Terms & Service</a>
+  </nav>
+  <div class="backup muted" style="margin-top:14px">Backup & resources: <br><a href="https://pirateruler.com" target="_blank" rel="noopener noreferrer">pirateruler.com</a></div>
+</aside>
 
 <script>
   // year
   document.getElementById('year').textContent = new Date().getFullYear();
 
-  // Theme toggling (only dark and light)
+  // Theme logic: only dark / light
   const root = document.documentElement;
   const themeToggle = document.getElementById('themeToggle');
-  const themeLabel = document.getElementById('themeLabel');
-  const themeIcon = document.getElementById('themeIcon');
-  const currentThemeDisplay = document.getElementById('currentTheme');
+  const currentThemeLabel = document.getElementById('currentThemeLabel');
 
-  function setTheme(mode){
-    if(mode === 'dark'){
-      root.classList.add('dark');
-      localStorage.setItem('site-theme', 'dark');
-      themeLabel.textContent = 'Dark';
-      themeIcon.textContent = '🌙';
-      themeToggle.setAttribute('aria-pressed','true');
-      currentThemeDisplay.textContent = 'Dark';
-    } else {
-      root.classList.remove('dark');
+  function applyTheme(theme) {
+    if (theme === 'light') {
+      root.classList.remove('dark'); root.classList.add('light');
+      themeToggle.textContent = 'Light'; themeToggle.setAttribute('aria-pressed','true');
+      currentThemeLabel.textContent = 'Light';
       localStorage.setItem('site-theme', 'light');
-      themeLabel.textContent = 'Light';
-      themeIcon.textContent = '☀️';
-      themeToggle.setAttribute('aria-pressed','false');
-      currentThemeDisplay.textContent = 'Light';
+    } else {
+      root.classList.remove('light'); // default dark
+      themeToggle.textContent = 'Dark'; themeToggle.setAttribute('aria-pressed','false');
+      currentThemeLabel.textContent = 'Dark';
+      localStorage.setItem('site-theme', 'dark');
     }
   }
 
-  // init
-  const saved = localStorage.getItem('site-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  setTheme(saved === 'dark' ? 'dark' : 'light');
+  const saved = localStorage.getItem('site-theme');
+  if (saved === 'light') applyTheme('light'); else applyTheme('dark');
 
   themeToggle.addEventListener('click', () => {
-    const isDark = root.classList.contains('dark');
-    setTheme(isDark ? 'light' : 'dark');
+    const isLight = root.classList.contains('light');
+    applyTheme(isLight ? 'dark' : 'light');
   });
 
   // Sidebar open/close
   const sidebar = document.getElementById('sidebar');
   const hambBtn = document.getElementById('hambBtn');
   const closeSidebar = document.getElementById('closeSidebar');
-
   function openSidebar(){ sidebar.classList.add('open'); sidebar.setAttribute('aria-hidden','false'); hambBtn.setAttribute('aria-expanded','true'); closeSidebar.focus(); }
   function closeSB(){ sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true'); hambBtn.setAttribute('aria-expanded','false'); }
-
   hambBtn.addEventListener('click', openSidebar);
   closeSidebar.addEventListener('click', closeSB);
   document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSB(); });
 
-  // Quick "start with text"
+  // quick "start with text" function — opens typing-test.html with encoded text param
   function goWithText(txt){
     const url = new URL(window.location.href);
     const target = (url.origin + '/typing-test.html') + '?q=' + encodeURIComponent(txt);
     window.location.href = target;
   }
-
-  // small: close sidebar when clicking outside (mobile)
-  document.addEventListener('click', function(e){
-    if(!sidebar.contains(e.target) && !hambBtn.contains(e.target)) closeSB();
-  });
 </script>
 </body>
 </html>
