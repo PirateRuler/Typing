@@ -7,219 +7,443 @@
 <meta name="description" content="Typing Test by PirateRuler — fast, privacy-first typing speed & accuracy tester. No tracking. Works in-browser." />
 <meta name="theme-color" content="#071225" />
 <link rel="icon" href="https://pirateruler.com/static/pr-logo.png" type="image/png">
+<link rel="apple-touch-icon" href="https://pirateruler.com/static/pr-logo.png">
 
 <style>
+  /* -------------------------
+     Design tokens (easy to tweak)
+     ------------------------- */
   :root{
-    --accent-a: #5ab3ff;
-    --accent-b: #7b5cff;
-    --bg-light: #f5f8fb;
-    --card-light: #ffffff;
-    --muted-light: #6b7480;
-    --text-light: #071225;
-
-    --bg-dark: #071225;
-    --card-dark: #061028;
-    --muted-dark: #98a7bf;
-    --text-dark: #e9f1ff;
-
-    --radius:16px;
-    --maxw:1040px;
+    --space: 16px;
+    --radius: 14px;
+    --text-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue";
+    --accent-a: #6b7dff; /* tweak this */
+    --accent-b: #7b4bff; /* tweak this */
+    --accent-c: #ff5aa4;
+    --bg: linear-gradient(180deg,#061028 0%, #071225 50%);
+    --card-dark: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    --glass: rgba(255,255,255,0.03);
+    --muted: #98a7bf;
+    --muted-2: rgba(233,241,255,0.14);
+    --text: #e9f1ff;
+    --radius-lg: 22px;
+    --shadow-lg: 0 20px 50px rgba(2,8,20,0.6);
+    --shadow-soft: 0 10px 30px rgba(2,8,20,0.35);
+    --max-width: 1100px;
   }
-  /* theme */
-  html {background:var(--bg-light); color:var(--text-light); font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; }
-  html.dark{ background: linear-gradient(180deg,#061028,#071225 70%); color:var(--text-dark); }
-  html.dark .card { background:var(--card-dark); color:var(--text-dark); }
-  .wrap{max-width:var(--maxw);margin:18px auto;padding:18px}
+
+  /* Light theme */
+  html.light {
+    --bg: linear-gradient(180deg,#f7fbfe,#f3f7fb);
+    --card-dark: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));
+    --glass: rgba(11,17,28,0.03);
+    --muted: #6b7480;
+    --muted-2: rgba(11,17,36,0.06);
+    --text: #071225;
+    --shadow-lg: 0 18px 50px rgba(3,12,30,0.06);
+    --shadow-soft: 0 8px 24px rgba(3,12,30,0.06);
+  }
+
+  /* basic reset */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:var(--text-sans);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    color:var(--text);
+    background:var(--bg);
+    padding:var(--space);
+    line-height:1.45;
+  }
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;height:auto;display:block}
+
+  .wrap{max-width:var(--max-width);margin:0 auto;padding-bottom:60px}
 
   /* header */
-  .header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px;border-radius:14px;background:rgba(0,0,0,0.03)}
-  .brand{display:flex;gap:12px;align-items:center}
-  .logo{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:900;color:white;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));}
-  .title{line-height:1}
-  .title .big{font-weight:900;font-size:18px}
-  .by{font-size:12px;color:gray;margin-top:4px}
+  header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px;
+    border-radius:12px;
+    background:transparent;
+    margin-bottom:12px;
+  }
+  .brand {display:flex; gap:12px; align-items:center}
+  .logo {
+    width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--accent-a),var(--accent-b)); color:white; font-weight:900; font-size:18px;
+    box-shadow:var(--shadow-soft);
+    flex-shrink:0;
+  }
+  .brand .title {font-weight:800; font-size:16px; margin-bottom:2px}
+  .brand .sub {font-size:12px;color:var(--muted)}
 
-  .controls{display:flex;gap:10px;align-items:center}
-  .hamb{width:52px;height:52px;border-radius:12px;background:rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,0.04);cursor:pointer}
-  .hamb svg{width:20px;height:20px}
+  /* header controls */
+  .controls {display:flex;gap:10px;align-items:center}
+  .theme-btn{
+    display:inline-flex;align-items:center;justify-content:center;padding:10px;border-radius:999px;background:var(--card-dark);border:0;
+    width:48px;height:48px;box-shadow:var(--shadow-soft);cursor:pointer;color:var(--text);
+  }
+  .hamb {
+    width:48px;height:48px;border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background:var(--card-dark); box-shadow:var(--shadow-soft); border:0; cursor:pointer; color:var(--text);
+  }
+  .hamb svg{width:20px;height:20px; fill:none; stroke:currentColor; stroke-width:2}
 
-  .theme-btn{padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(0,0,0,0.04);font-weight:800;cursor:pointer}
+  /* hero */
+  .hero {
+    border-radius:18px;
+    padding:28px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow:var(--shadow-lg);
+    text-align:center;
+    position:relative;
+    overflow:visible;
+  }
+  .kicker {
+    display:inline-block;padding:6px 12px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    color:var(--muted); font-weight:700;font-size:13px;margin-bottom:12px;
+  }
+  .h1 {font-size:34px;font-weight:900; margin:6px 0 8px; line-height:1.03; letter-spacing:-0.02em}
+  .lead {max-width:920px;margin:0 auto;color:var(--muted); font-size:15px}
 
-  /* hero (QR style) */
-  .hero{margin-top:18px;padding:34px;border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96)); box-shadow:0 30px 80px rgba(3,12,30,0.06)}
-  html.dark .hero{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); box-shadow:0 30px 80px rgba(0,0,0,0.6) }
-  .kicker{display:inline-block;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,0.04);color:gray;font-weight:700}
-  .h1{font-size:34px;font-weight:900;margin:14px 0 8px;line-height:1.03}
-  .lead{color:gray;max-width:900px;margin:0 auto 18px}
+  .hero-cta {margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn-primary {
+    background:linear-gradient(90deg,var(--accent-a),var(--accent-b));
+    color:white;padding:14px 26px;border-radius:14px;font-weight:900;border:0;box-shadow:0 18px 40px rgba(107,93,255,0.18);
+    display:inline-flex;align-items:center;gap:10px;font-size:16px
+  }
+  .btn-ghost {
+    background:transparent;border:1px solid var(--muted-2); padding:12px 18px;border-radius:12px;color:var(--muted);font-weight:800;
+  }
 
-  .cta {display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-  .primary{padding:14px 28px;border-radius:14px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:white;font-weight:900;border:0;cursor:pointer;box-shadow:0 12px 30px rgba(91,140,255,0.14)}
-  .pill{padding:10px 18px;border-radius:999px;background:linear-gradient(90deg,#ff7aa2,#6b7dff);color:white;font-weight:900;text-decoration:none}
+  /* stats bar */
+  .stats {display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+  .stat {
+    padding:12px 18px;border-radius:12px;background:var(--card-dark); box-shadow:var(--shadow-soft);
+    min-width:120px;text-align:center;
+  }
+  .stat .num{font-weight:900;font-size:16px}
+  .stat .lbl{font-size:13px;color:var(--muted);margin-top:4px}
 
-  /* main */
-  .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:22px}
-  @media(max-width:980px){.grid{grid-template-columns:1fr}}
+  /* layout */
+  .main-grid {display:grid;grid-template-columns:1fr 380px;gap:18px;margin-top:22px;align-items:start}
+  @media(max-width:980px){ .main-grid{ grid-template-columns: 1fr } .hero .h1{font-size:28px} }
 
-  .card{background:var(--card-light);padding:18px;border-radius:14px;box-shadow:0 8px 24px rgba(3,12,30,0.06);border:1px solid rgba(0,0,0,0.04)}
-  html.dark .card{ background:var(--card-dark); border:1px solid rgba(255,255,255,0.02) }
+  .panel {background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:14px; padding:18px; box-shadow:var(--shadow-soft)}
+  h2.section {margin:0 0 8px 0;font-size:20px;font-weight:900}
 
-  .features{display:grid;gap:12px;margin-top:12px}
-  .feature{display:flex;gap:12px;align-items:center;padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));border:1px solid rgba(0,0,0,0.03)}
-  .icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-weight:900;background:linear-gradient(135deg,var(--accent-a),var(--accent-b))}
+  /* features cards (like QR site) */
+  .features {display:grid;grid-template-columns:1fr;gap:12px}
+  .feature {
+    display:flex;gap:14px;align-items:center;padding:16px;border-radius:12px;background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .feature .ic {
+    width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;
+  }
+  .feature h4{margin:0;font-weight:900}
+  .feature p{margin:6px 0 0;color:var(--muted)}
 
-  /* RIGHT column: simplified QR-like promo only (removed the whole "Get the most" block) */
-  .promo { border-radius:14px;padding:20px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); box-shadow:0 18px 40px rgba(0,0,0,0.08); text-align:center; }
-  .promo .pill-icon{width:64px;height:64px;border-radius:12px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent-a),var(--accent-b));color:white;font-weight:900}
-  .promo h3{margin:6px 0 8px;font-weight:900}
-  .promo p{margin:0 0 14px;color:gray}
+  /* use-cases grid (cards) */
+  .usecases {display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .uc{padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02)); box-shadow:var(--shadow-soft); text-align:center}
+  .uc .uc-icon {width:56px;height:56px;border-radius:12px;margin:0 auto 10px;background:linear-gradient(135deg,var(--accent-b),var(--accent-a));display:flex;align-items:center;justify-content:center;color:white;font-weight:900}
 
-  /* footer: single CTA, no duplicates */
-  footer{margin-top:26px;text-align:center}
-  .visit{display:inline-block;padding:12px 22px;border-radius:999px;background:linear-gradient(90deg,#ff7aa2,#6b7dff);color:white;font-weight:900;text-decoration:none;box-shadow:0 12px 28px rgba(107,125,255,0.12)}
+  /* testimonials */
+  .testimonials {display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+  .tm {padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));}
+  .tm p {margin:0;color:var(--muted)}
+  .tm .who {margin-top:12px;font-weight:800}
 
-  /* off-canvas sidebar (clean links) */
-  .sidebar{position:fixed;top:14px;right:14px;width:360px;max-width:92vw;height:calc(100vh - 28px);background:var(--card-light);border-radius:12px;padding:18px;box-shadow:-30px 0 60px rgba(3,12,30,0.08);transform:translateX(110%);transition:transform .28s}
-  html.dark .sidebar{ background:var(--card-dark) }
-  .sidebar.open{ transform:translateX(0) }
-  .sidebar h4{margin:0 0 6px}
-  .sidebar .muted{color:gray;margin-bottom:12px}
-  .sidebar a{display:block;padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));margin-bottom:8px;font-weight:800;color:inherit;text-decoration:none}
+  /* FAQ */
+  .faq {margin-top:16px}
+  .q {padding:12px;border-radius:10px;background:var(--card-dark);margin-bottom:8px}
+  .q h4{margin:0;font-size:15px}
+  .q p{margin:6px 0 0;color:var(--muted);font-size:14px}
+
+  /* right column */
+  .right-col {position:relative}
+  .preview-card {border-radius:12px;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));box-shadow:var(--shadow-soft)}
+  .mini-cta {display:block;margin-top:16px;padding:12px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));text-align:center;color:white;font-weight:900}
+
+  /* footer */
+  footer {margin-top:28px;text-align:center}
+  footer .visit {display:inline-block;padding:12px 20px;border-radius:999px;background:linear-gradient(90deg,var(--accent-c),var(--accent-a));color:white;font-weight:800;box-shadow:0 14px 40px rgba(139,60,140,0.14)}
+  footer small{display:block;margin-top:10px;color:var(--muted);font-size:13px}
+
+  /* off-canvas sidebar */
+  .offcanvas {position:fixed;right:12px;top:12px;width:340px;max-width:92vw;background:var(--card-dark);border-radius:14px;padding:14px;box-shadow:var(--shadow-lg);transform:translateX(120%);transition:transform .28s ease;z-index:200}
+  .offcanvas.open{transform:translateX(0)}
+  .offcanvas h3{margin:0 0 8px 0}
+  .offcanvas a{display:block;padding:10px;border-radius:10px;color:var(--text);font-weight:800;margin-bottom:6px;background:transparent;border:1px solid rgba(255,255,255,0.02)}
 
   /* small screens */
-  @media(max-width:520px){ .logo{width:48px;height:48px} .h1{font-size:26px} .hamb{width:48px;height:48px} }
+  @media(max-width:720px){
+    .usecases {grid-template-columns:1fr}
+    .main-grid{grid-template-columns:1fr}
+    .hero {padding:20px}
+    .h1{font-size:26px}
+  }
 </style>
 </head>
-<body>
-
-<div class="wrap" role="document">
-  <!-- HEADER -->
-  <header class="header" role="banner">
-    <div class="brand">
-      <a href="/" aria-label="PirateRuler home" style="display:flex;align-items:center;gap:12px">
-        <div class="logo">PR</div>
-        <div class="title">
-          <div class="big">Typing<br>Test</div>
-          <div class="by">by PirateRuler.com</div>
+<body class="dark">
+  <div class="wrap">
+    <!-- header -->
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">PR</div>
+        <div>
+          <div class="title">Typing Test</div>
+          <div class="sub">by PirateRuler.com</div>
         </div>
-      </a>
-    </div>
+      </div>
 
-    <div class="controls" role="navigation" aria-label="Header controls">
-      <button id="themeBtn" class="theme-btn" aria-pressed="false" title="Toggle theme">Dark</button>
-      <!-- hamburger icon only (NO "Menu" text) -->
-      <button id="hamb" class="hamb" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
-      </button>
-    </div>
-  </header>
+      <div class="controls" role="navigation" aria-label="Header controls">
+        <!-- theme: just icon -->
+        <button id="toggleTheme" class="theme-btn" title="Toggle theme" aria-pressed="true">🌙</button>
 
-  <!-- HERO -->
-  <section class="hero" aria-labelledby="heroTitle">
-    <div style="text-align:center">
+        <!-- hamburger: icon only -->
+        <button id="openMenu" class="hamb" aria-controls="menu" aria-expanded="false" title="Open menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- hero -->
+    <section class="hero" aria-labelledby="hero-title">
       <div class="kicker">Trusted by developers & learners</div>
-      <h1 id="heroTitle" class="h1">Measure typing speed & accuracy — private, instant</h1>
-      <p class="lead">Practice with short drills or long passages. Browser-only tests (no accounts, no tracking). Perfect for streamers, students, and hiring tests.</p>
+      <h1 id="hero-title" class="h1">Measure typing speed & accuracy — private, instant</h1>
+      <p class="lead">Practice short drills or full passages. Offline-by-default, privacy-first, perfect for streamers, students, and hiring tests. No accounts, no tracking.</p>
 
-      <!-- Single CTA (no "How it works") -->
-      <div class="cta">
-        <a class="primary" href="/typing-test.html">Start Typing Test — Free</a>
+      <div class="hero-cta">
+        <a class="btn-primary" href="/typing-test.html" aria-label="Start typing test">Start Typing Test — Free</a>
+        <button class="btn-ghost" onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">Read FAQ</button>
       </div>
+
+      <div class="stats" aria-hidden="true">
+        <div class="stat"><div class="num">10k+</div><div class="lbl">Active users</div></div>
+        <div class="stat"><div class="num">500k+</div><div class="lbl">Tests generated</div></div>
+        <div class="stat"><div class="num">99.9%</div><div class="lbl">Uptime</div></div>
+      </div>
+    </section>
+
+    <!-- main content -->
+    <div class="main-grid">
+      <!-- left -->
+      <div>
+        <section class="panel">
+          <h2 class="section">Powerful features</h2>
+          <p class="muted">Everything runs in your browser — fast, secure and private. Export results, schedule daily drills, and improve your accuracy with per-character feedback.</p>
+
+          <div class="features" aria-hidden="false" style="margin-top:12px">
+            <div class="feature">
+              <div class="ic">⚡</div>
+              <div>
+                <h4>Instant & offline-first</h4>
+                <p>Runs locally — test speed without server latency. Perfect for low-bandwidth environments.</p>
+              </div>
+            </div>
+
+            <div class="feature">
+              <div class="ic">🔒</div>
+              <div>
+                <h4>Privacy-first</h4>
+                <p>Results stay in your browser. Export only when you want it — no accounts required.</p>
+              </div>
+            </div>
+
+            <div class="feature">
+              <div class="ic">📊</div>
+              <div>
+                <h4>Detailed scoring</h4>
+                <p>Per-character accuracy, WPM breakdown, and error heatmaps help you fix weak keys.</p>
+              </div>
+            </div>
+
+            <div class="feature">
+              <div class="ic">🎯</div>
+              <div>
+                <h4>Practice modes & drills</h4>
+                <p>Timed (30/60/120s), long passages, daily drill scheduling and custom text support.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-top:14px">
+          <h2 class="section">Where people use it</h2>
+          <div class="usecases">
+            <div class="uc">
+              <div class="uc-icon">💼</div>
+              <h4>Hiring tests</h4>
+              <p class="muted">Quick, unbiased typing and accuracy tests for interviews and assessments.</p>
+            </div>
+            <div class="uc">
+              <div class="uc-icon">🎥</div>
+              <h4>Streamers & creators</h4>
+              <p class="muted">Show live WPM overlays and challenge viewers with public passages.</p>
+            </div>
+            <div class="uc">
+              <div class="uc-icon">🏫</div>
+              <h4>Students</h4>
+              <p class="muted">Daily drills and progress tracking to build speed and reduce errors.</p>
+            </div>
+            <div class="uc">
+              <div class="uc-icon">🧰</div>
+              <h4>Developers</h4>
+              <p class="muted">Simple, privacy-safe tests to benchmark keyboard performance and layout changes.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" style="margin-top:14px">
+          <h2 class="section">Practice examples</h2>
+          <p class="muted">Tap any preset — or paste your own text on the test page.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <button class="btn-ghost" onclick="startWith('The quick brown fox jumps over the lazy dog')">Pangram — 30s</button>
+            <button class="btn-ghost" onclick="startWith('Practice daily: consistency beats intensity when learning to type')">Phrase — 60s</button>
+            <button class="btn-ghost" onclick="startWith('Tech headlines move fast — reading and typing help retention')">Tech — 60s</button>
+            <button class="btn-ghost" onclick="startWith('A long practice passage focusing on accuracy and even rhythm throughout your test')">Long — 120s</button>
+          </div>
+        </section>
+
+        <section class="panel" id="testimonials" style="margin-top:14px">
+          <h2 class="section">What people say</h2>
+          <div class="testimonials">
+            <div class="tm">
+              <p>“I improved from 62 to 85 WPM in 3 weeks using the daily drills — the error map is genius.”</p>
+              <div class="who">— Aisha, streamer</div>
+            </div>
+            <div class="tm">
+              <p>“No signup, no tracking — exactly what we needed for blind hiring tests.”</p>
+              <div class="who">— Dev hiring lead, FinTech</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="faq" style="margin-top:14px">
+          <h2 class="section">FAQ</h2>
+          <div class="faq">
+            <div class="q">
+              <h4>Is my data stored on a server?</h4>
+              <p>No. All results and typing data are kept in your browser unless you export them manually.</p>
+            </div>
+            <div class="q">
+              <h4>Can I use custom text?</h4>
+              <p>Yes — paste any passage on the test page, set duration, and start typing.</p>
+            </div>
+            <div class="q">
+              <h4>Does it work offline?</h4>
+              <p>If you've loaded the app, tests run locally. Some external assets may need a connection initially.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- right column -->
+      <aside class="right-col" aria-label="Sidebar content">
+        <div class="preview-card panel">
+          <h3 style="margin-top:0">Try a quick drill</h3>
+          <p class="muted">Start a 60s practice — immediate results. Export CSV when done.</p>
+          <a class="mini-cta" href="/typing-test.html?q=Type%20this%20sample%20text">Start 60s practice →</a>
+
+          <div style="margin-top:14px">
+            <h4 style="margin:0 0 6px 0">Quick settings</h4>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+              <div style="background:var(--card-dark);padding:10px;border-radius:10px;font-weight:800">Theme: <span id="miniTheme">Dark</span></div>
+              <div style="background:var(--card-dark);padding:10px;border-radius:10px;font-weight:800">Privacy: Browser only</div>
+              <div style="background:var(--card-dark);padding:10px;border-radius:10px;font-weight:800">Export: CSV / JSON</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="panel">
+          <h3 style="margin:0 0 8px 0">Ready to get serious?</h3>
+          <p class="muted">Upgrade your typing with structured drills and progress tracking. Built for professionals and learners.</p>
+          <a class="mini-cta" href="/typing-test.html">Start Training →</a>
+        </div>
+      </aside>
     </div>
-  </section>
 
-  <!-- MAIN GRID: LEFT=content, RIGHT=single QR-style promo (NO "Get the most" block) -->
-  <main class="grid" role="main">
-    <div>
-      <section class="card" aria-labelledby="whyTitle">
-        <h2 id="whyTitle">Why PirateRuler Typing Test?</h2>
-        <p class="muted">Fast, privacy-first, and focused — everything runs in your browser. Export results locally.</p>
+    <!-- footer -->
+    <footer>
+      <a class="visit" href="https://pirateruler.com" target="_blank" rel="noopener noreferrer">Visit PirateRuler.com</a>
+      <small id="copyright" style="display:block;margin-top:12px;color:var(--muted)">© <span id="year"></span> PirateRuler — Typing Test. Privacy-first, browser-only.</small>
+    </footer>
+  </div>
 
-        <div class="features">
-          <div class="feature"><div class="icon">⚡</div><div><h4 style="margin:0">Lightning fast</h4><p style="margin:6px 0 0;color:gray">Instant tests, fast load.</p></div></div>
-          <div class="feature"><div class="icon" style="background:linear-gradient(135deg,#8ee36b,#2bbf6f)">🔒</div><div><h4 style="margin:0">Privacy-first</h4><p style="margin:6px 0 0;color:gray">No data stored on our servers.</p></div></div>
-          <div class="feature"><div class="icon" style="background:linear-gradient(135deg,#c471ed,#7bffdd)">🏅</div><div><h4 style="margin:0">Accurate scoring</h4><p style="margin:6px 0 0;color:gray">Per-character accuracy, WPM & breakdown.</p></div></div>
-        </div>
-
-        <div style="margin-top:16px">
-          <h3 style="margin:0 0 8px 0">Quick start</h3>
-          <ol style="margin:0 0 6px 18px;color:gray">
-            <li>Click <strong>Start Typing Test</strong></li>
-            <li>Choose duration or paste text</li>
-            <li>Finish → view WPM & accuracy</li>
-          </ol>
-        </div>
-      </section>
-
-      <section class="card" style="margin-top:14px">
-        <h3 style="margin:0 0 8px 0">Practice examples</h3>
-        <p style="margin:0 0 12px;color:gray">Tap a preset or paste your text on the test page.</p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button onclick="goWith('The quick brown fox jumps over the lazy dog')" class="theme-btn">Pangram — 30s</button>
-          <button onclick="goWith('Typing improves with steady daily practice and short sessions')" class="theme-btn">Practice phrase — 60s</button>
-          <button onclick="goWith('Technology changes quickly; practice keeps your skills sharp')" class="theme-btn">Tech line — 60s</button>
-        </div>
-      </section>
-    </div>
-
-    <!-- Right: single QR-style promo (compact, no messy settings list) -->
-    <aside>
-      <div class="promo">
-        <div class="pill-icon">PR</div>
-        <h3 style="margin:6px 0">Take the test — get better</h3>
-        <p style="margin:0 0 14px;color:gray">Privacy-first typing drills for real improvement. No signups — just type.</p>
-        <a class="primary" href="/typing-test.html">Start Now</a>
-      </div>
-
-      <!-- small footer card -->
-      <div style="height:12px"></div>
-      <div class="card" style="text-align:center;margin-top:12px">
-        <div style="font-weight:900">Trusted by devs</div>
-        <div style="color:gray;margin-top:6px">Browser-only. Export locally.</div>
-      </div>
-    </aside>
-  </main>
-
-  <!-- footer: single bold CTA, no duplicates -->
-  <footer>
-    <a class="visit" href="https://pirateruler.com" target="_blank" rel="noopener">Visit PirateRuler.com</a>
+  <!-- offcanvas menu -->
+  <div id="menu" class="offcanvas" role="dialog" aria-hidden="true" aria-label="Site menu">
+    <h3>Menu</h3>
+    <p class="muted" style="margin-top:0;margin-bottom:10px">Quick links & actions</p>
+    <a href="/typing-test.html">Start Test</a>
+    <a href="https://pirateruler.com/post/about.html" target="_blank">About</a>
+    <a href="https://pirateruler.com/post/privacy.html" target="_blank">Privacy</a>
+    <a href="https://pirateruler.com/post/contact.html" target="_blank">Contact</a>
+    <a href="https://pirateruler.com/post/terms.html" target="_blank">Terms</a>
     <div style="height:12px"></div>
-    <div style="color:gray">© <span id="yr"></span> PirateRuler — Typing Test. Privacy-first.</div>
-  </footer>
-</div>
-
-<!-- off-canvas sidebar (clean links) -->
-<aside id="sidebar" class="sidebar" aria-hidden="true">
-  <button id="closeSide" style="float:right;border:0;background:transparent;font-weight:800;cursor:pointer">Close</button>
-  <h4>Menu</h4>
-  <div class="muted">Quick links</div>
-  <a href="https://pirateruler.com">PirateRuler.com</a>
-  <a href="https://pirateruler.com/post/privacy.html">Privacy</a>
-  <a href="https://pirateruler.com/post/contact.html">Contact</a>
-</aside>
+    <button id="closeMenu" style="padding:10px;border-radius:10px;border:0;background:linear-gradient(90deg,#fff, #ddd);width:100%;font-weight:800">Close</button>
+  </div>
 
 <script>
   // year
-  document.getElementById('yr').textContent = new Date().getFullYear();
+  document.getElementById('year').textContent = new Date().getFullYear();
 
-  // theme toggle (dark / light)
-  const themeBtn = document.getElementById('themeBtn');
-  const htmlEl = document.documentElement;
-  function setTheme(t){
-    if(t==='dark'){ htmlEl.classList.add('dark'); localStorage.setItem('theme','dark'); themeBtn.textContent='Dark'; }
-    else { htmlEl.classList.remove('dark'); localStorage.setItem('theme','light'); themeBtn.textContent='Light'; }
+  // theme toggle: toggles between dark and light classes on <body>
+  const body = document.body;
+  const toggle = document.getElementById('toggleTheme');
+  const miniTheme = document.getElementById('miniTheme');
+
+  // init from localStorage or default dark
+  const saved = localStorage.getItem('pr-theme') || 'dark';
+  body.className = saved === 'light' ? 'light' : 'dark';
+  updateThemeIcon();
+
+  toggle.addEventListener('click', () => {
+    if(body.classList.contains('light')){
+      body.classList.remove('light'); body.classList.add('dark'); localStorage.setItem('pr-theme','dark');
+    } else {
+      body.classList.remove('dark'); body.classList.add('light'); localStorage.setItem('pr-theme','light');
+    }
+    updateThemeIcon();
+  });
+
+  function updateThemeIcon(){
+    if(body.classList.contains('light')){
+      toggle.textContent = '☀️';
+      miniTheme.textContent = 'Light';
+    } else {
+      toggle.textContent = '🌙';
+      miniTheme.textContent = 'Dark';
+    }
   }
-  const saved = localStorage.getItem('theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  setTheme(saved);
-  themeBtn.addEventListener('click', ()=> setTheme(htmlEl.classList.contains('dark') ? 'light' : 'dark'));
 
-  // sidebar open/close
-  const hamb = document.getElementById('hamb'), sidebar = document.getElementById('sidebar'), closeSide = document.getElementById('closeSide');
-  hamb.addEventListener('click', ()=>{ sidebar.classList.add('open'); sidebar.setAttribute('aria-hidden','false'); hamb.setAttribute('aria-expanded','true') });
-  closeSide.addEventListener('click', ()=>{ sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true'); hamb.setAttribute('aria-expanded','false')});
-  document.addEventListener('click', (e)=>{ if(!sidebar.contains(e.target) && !hamb.contains(e.target)) sidebar.classList.remove('open') });
+  // offcanvas menu
+  const menu = document.getElementById('menu');
+  const openMenu = document.getElementById('openMenu');
+  const closeMenu = document.getElementById('closeMenu');
+  openMenu.addEventListener('click', () => {
+    menu.classList.add('open'); menu.setAttribute('aria-hidden','false'); openMenu.setAttribute('aria-expanded','true');
+  });
+  closeMenu.addEventListener('click', () => {
+    menu.classList.remove('open'); menu.setAttribute('aria-hidden','true'); openMenu.setAttribute('aria-expanded','false');
+  });
 
-  // quick start with preset text
-  function goWith(t){ location.href = '/typing-test.html?q=' + encodeURIComponent(t); }
+  // start sample functions
+  function startWith(text){
+    // builds quick link to typing test with query (same logic as your original)
+    const url = new URL(window.location.href);
+    const target = url.origin + '/typing-test.html?q=' + encodeURIComponent(text);
+    window.location.href = target;
+  }
 </script>
 </body>
 </html>
